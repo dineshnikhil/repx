@@ -37,7 +37,10 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
 						styles.noButton,
 						hasFitnessExperience === false && styles.selectedButton,
 					]}
-					onPress={() => updateExperience(false)}
+					onPress={() => {
+						updateExperience(false);
+						onContinue();
+					}}
 				>
 					<Text style={styles.buttonText}>No</Text>
 				</TouchableOpacity>
@@ -48,7 +51,10 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
 						styles.yesButton,
 						hasFitnessExperience === true && styles.selectedButton,
 					]}
-					onPress={() => updateExperience(true)}
+					onPress={() => {
+						updateExperience(true);
+						onContinue();
+					}}
 				>
 					<Text style={styles.buttonText}>Yes</Text>
 				</TouchableOpacity>
