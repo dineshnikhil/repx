@@ -1,0 +1,175 @@
+import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+	Animated,
+	Easing,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
+import Svg, { Circle, G } from 'react-native-svg';
+
+export default function LoadingScreen() {
+	// Animation values
+	const [percentage, setPercentage] = useState(0);
+	const animatedValue = useRef(new Animated.Value(0)).current;
+
+	// Constants for the circle
+	const CIRCLE_SIZE = 200;
+	const STROKE_WIDTH = 15;
+	const RADIUS = (CIRCLE_SIZE - STROKE_WIDTH) / 2;
+	const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+	// Navigate to onboarding after animation completes
+	useEffect(() => {
+		// Start the counter animation
+		const timer = setInterval(() => {
+			setPercentage((prev) => {
+				if (prev >= 75) {
+					clearInterval(timer);
+					return 75;
+				}
+				return prev + 1;
+			});
+		}, 20);
+
+		// Start the circle fill animation
+		Animated.timing(animatedValue, {
+			toValue: 0.75,
+			duration: 1500,
+			useNativeDriver: true,
+			easing: Easing.linear,
+		}).start();
+
+		return () => {
+			clearInterval(timer);
+		};
+	}, []);
+
+	// Calculate the stroke-dashoffset value based on the progress
+	const progressStroke = animatedValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: [CIRCLE_CIRCUMFERENCE, 0],
+	});
+
+	const handleStartTracking = () => {
+		router.replace('/onboarding');
+	};
+
+	return (
+		<View style={styles.container}>
+			<StatusBar style="light" />
+
+			<View style={styles.contentContainer}>
+				<Text style={styles.title}>Creating your{'\n'}customized Profile</Text>
+
+				<View style={styles.progressContainer}>
+					<Svg
+						width={CIRCLE_SIZE}
+						height={CIRCLE_SIZE}
+						viewBox={`0 0 ${CIRCLE_SIZE} ${CIRCLE_SIZE}`}
+					>
+						{/* Background circle */}
+						<Circle
+							cx={CIRCLE_SIZE / 2}
+							cy={CIRCLE_SIZE / 2}
+							r={RADIUS}
+							strokeWidth={STROKE_WIDTH}
+							stroke="#555"
+							fill="transparent"
+						/>
+
+						{/* Progress circle */}
+						<G rotation="-90" origin={`${CIRCLE_SIZE / 2}, ${CIRCLE_SIZE / 2}`}>
+							<AnimatedCircle
+								cx={CIRCLE_SIZE / 2}
+								cy={CIRCLE_SIZE / 2}
+								r={RADIUS}
+								strokeWidth={STROKE_WIDTH}
+								stroke="#FF6B00"
+								fill="transparent"
+								strokeLinecap="round"
+								strokeDasharray={CIRCLE_CIRCUMFERENCE}
+								strokeDashoffset={progressStroke}
+							/>
+						</G>
+					</Svg>
+
+					{/* Percentage counter */}
+					<Text style={styles.progressText}>{percentage}%</Text>
+				</View>
+
+				<Text style={styles.subtitle}>
+					we are creating your profile, please hang on
+				</Text>
+			</View>
+
+			<TouchableOpacity
+				style={styles.startButton}
+				onPress={handleStartTracking}
+			>
+				<Text style={styles.startButtonText}>Start Tracking</Text>
+			</TouchableOpacity>
+		</View>
+	);
+}
+
+// Create an animated version of the Circle component
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#000',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingHorizontal: 30,
+		paddingBottom: 50,
+	},
+	contentContainer: {
+		alignItems: 'center',
+		width: '100%',
+		flex: 1,
+		justifyContent: 'center',
+	},
+	title: {
+		fontSize: 36,
+		fontWeight: 'bold',
+		color: 'white',
+		textAlign: 'center',
+		marginBottom: 80,
+	},
+	progressContainer: {
+		width: 200,
+		height: 200,
+		justifyContent: 'center',
+		alignItems: 'center',
+		position: 'relative',
+	},
+	progressText: {
+		fontSize: 56,
+		fontWeight: 'bold',
+		color: 'white',
+		position: 'absolute',
+	},
+	subtitle: {
+		fontSize: 16,
+		color: '#888',
+		marginTop: 80,
+	},
+	startButton: {
+		backgroundColor: '#FF6B00',
+		borderRadius: 12,
+		paddingVertical: 16,
+		width: '100%',
+		alignItems: 'center',
+		marginTop: 'auto',
+	},
+	startButtonText: {
+		color: 'white',
+		fontSize: 18,
+		fontWeight: 'bold',
+	},
+});
