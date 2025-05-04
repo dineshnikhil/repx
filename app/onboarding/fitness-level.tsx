@@ -103,7 +103,7 @@ export default function FitnessLevelScreen() {
 						]}
 						onPress={() => handleLevelSelect('intermediate')}
 					>
-						<Text style={styles.levelText}>Beginner</Text>
+						<Text style={styles.levelText}>Intermediate</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
@@ -113,7 +113,7 @@ export default function FitnessLevelScreen() {
 						]}
 						onPress={() => handleLevelSelect('advanced')}
 					>
-						<Text style={styles.levelText}>Beginner</Text>
+						<Text style={styles.levelText}>Advance</Text>
 					</TouchableOpacity>
 				</View>
 			</View>

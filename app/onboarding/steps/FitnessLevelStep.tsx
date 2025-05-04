@@ -31,14 +31,14 @@ const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 					style={styles.levelButton}
 					onPress={() => updateFitnessLevel('beginner')}
 				>
-					<Text style={styles.levelText}>Beginner</Text>
+					<Text style={styles.levelText}>Intermediate</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
 					style={styles.levelButton}
 					onPress={() => updateFitnessLevel('beginner')}
 				>
-					<Text style={styles.levelText}>Beginner</Text>
+					<Text style={styles.levelText}>Advance</Text>
 				</TouchableOpacity>
 			</View>
 
