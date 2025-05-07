@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: '48%',
-		paddingVertical: 12,
+		paddingVertical: 16,
 		borderRadius: 12,
 		alignItems: 'center',
 	},

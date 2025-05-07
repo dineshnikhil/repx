@@ -66,16 +66,17 @@ const styles = StyleSheet.create({
 		color: 'white',
 		textAlign: 'center',
 		marginTop: 100,
-		marginBottom: 50,
+		marginBottom: 0,
 	},
 	levelsContainer: {
 		paddingHorizontal: 20,
 		gap: 20,
+		marginBottom: 70,
 	},
 	levelButton: {
 		backgroundColor: '#1C1C1E',
-		borderRadius: 15,
-		paddingVertical: 25,
+		borderRadius: 12,
+		paddingVertical: 20,
 		alignItems: 'center',
 	},
 	selectedLevel: {
@@ -84,20 +85,20 @@ const styles = StyleSheet.create({
 	},
 	levelText: {
 		color: 'white',
-		fontSize: 20,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	continueButton: {
 		backgroundColor: '#E84118',
-		borderRadius: 30,
+		borderRadius: 12,
 		marginHorizontal: 20,
-		paddingVertical: 18,
+		paddingVertical: 16,
 		alignItems: 'center',
 		marginBottom: 40,
 	},
 	continueText: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });
