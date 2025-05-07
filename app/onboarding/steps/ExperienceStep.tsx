@@ -25,7 +25,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
 							? require('../../../assets/images/wroking-female.png')
 							: require('../../../assets/images/working-male.png')
 					}
-					style={styles.image}
+					style={[[styles.MaleImage, gender === 'female' && styles.FemaleImage]]}
 					resizeMode="contain"
 				/>
 			</View>
@@ -81,9 +81,13 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	image: {
+	MaleImage: {
 		width: '100%',
 		height: '100%',
+	},
+	FemaleImage: {
+		width: '80%',
+		height: '80%',
 	},
 	buttonsContainer: {
 		flexDirection: 'row',
