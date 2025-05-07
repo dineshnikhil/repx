@@ -15,6 +15,7 @@ export default function LoadingScreen() {
 	// Animation values
 	const [percentage, setPercentage] = useState(0);
 	const animatedValue = useRef(new Animated.Value(0)).current;
+	const [buttonEnabled, setButtonEnabled] = useState(false);
 
 	// Constants for the circle
 	const CIRCLE_SIZE = 200;
@@ -27,9 +28,9 @@ export default function LoadingScreen() {
 		// Start the counter animation
 		const timer = setInterval(() => {
 			setPercentage((prev) => {
-				if (prev >= 75) {
+				if (prev >= 100) {
 					clearInterval(timer);
-					return 75;
+					return 100;
 				}
 				return prev + 1;
 			});
@@ -37,14 +38,20 @@ export default function LoadingScreen() {
 
 		// Start the circle fill animation
 		Animated.timing(animatedValue, {
-			toValue: 0.75,
-			duration: 1500,
+			toValue: 1,
+			duration: 2000,
 			useNativeDriver: true,
 			easing: Easing.linear,
 		}).start();
 
+		// Enable button after animation completes (2 seconds)
+		const buttonTimer = setTimeout(() => {
+			setButtonEnabled(true);
+		}, 2000);
+
 		return () => {
 			clearInterval(timer);
+			clearTimeout(buttonTimer);
 		};
 	}, []);
 
@@ -107,10 +114,13 @@ export default function LoadingScreen() {
 			</View>
 
 			<TouchableOpacity
-				style={styles.startButton}
+				style={[styles.startButton, !buttonEnabled && styles.disabledButton]}
 				onPress={handleStartTracking}
+				disabled={!buttonEnabled}
 			>
-				<Text style={styles.startButtonText}>Start Tracking</Text>
+				<Text style={styles.startButtonText}>
+					{buttonEnabled ? 'Start Tracking' : 'Please wait...'}
+				</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -127,6 +137,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: 30,
 		paddingBottom: 50,
+	},
+	disabledButton: {
+		backgroundColor: '#666',
+		opacity: 0.7,
 	},
 	contentContainer: {
 		alignItems: 'center',
