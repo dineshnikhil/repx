@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 		marginTop: 30,
 	},
 	logoText: {
-		fontSize: 64,
+		fontSize: 100,
 		fontWeight: 'bold',
 		color: '#FFF',
 	},
@@ -68,15 +68,14 @@ const styles = StyleSheet.create({
 	trackRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginBottom: 10,
 	},
 	trackText: {
 		fontSize: 40,
 		fontWeight: 'bold',
-		color: '#FF6B00',
+		color: '#FF5722',
 	},
 	everyRepText: {
-		fontSize: 36,
+		fontSize: 28,
 		color: '#AAA',
 	},
 	progressRow: {
@@ -84,22 +83,22 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	unlockText: {
-		fontSize: 36,
+		fontSize: 28,
 		color: '#AAA',
 	},
 	progressText: {
 		fontSize: 40,
 		fontWeight: 'bold',
-		color: '#FF6B00',
+		color: '#FF5722',
 	},
 	button: {
-		backgroundColor: '#FF6B00',
-		paddingVertical: 18,
+		backgroundColor: '#FF5722',
+		paddingVertical: 16,
 		paddingHorizontal: 50,
-		borderRadius: 50,
+		borderRadius: 12,
 		width: '80%',
 		alignItems: 'center',
-		marginBottom: 20,
+		marginBottom: 40,
 	},
 	buttonText: {
 		color: '#FFF',

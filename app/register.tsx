@@ -120,7 +120,7 @@ export default function RegisterScreen() {
 				<TouchableOpacity style={styles.socialButton}>
 					<Image
 						source={{
-							uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+							uri: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Google-g-icon.png',
 						}}
 						style={styles.socialIcon}
 					/>
