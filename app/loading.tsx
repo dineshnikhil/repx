@@ -25,33 +25,33 @@ export default function LoadingScreen() {
 
 	// Navigate to onboarding after animation completes
 	useEffect(() => {
-		// Start the counter animation
+		// Animation duration in milliseconds
+		const animationDuration = 2000;
+		// Total steps for percentage (0-100)
+		const totalSteps = 100;
+		// Calculate interval for smooth percentage updates
+		const updateInterval = animationDuration / totalSteps;
+		
+		// Start the counter animation synchronized with progress bar
 		const timer = setInterval(() => {
 			setPercentage((prev) => {
-				if (prev >= 100) {
+				const newPercentage = prev + 1;
+				
+				// Update the animated value to match the percentage
+				animatedValue.setValue(newPercentage / 100);
+				
+				if (newPercentage >= 100) {
 					clearInterval(timer);
+					// Enable button only after reaching 100%
+					setButtonEnabled(true);
 					return 100;
 				}
-				return prev + 1;
+				return newPercentage;
 			});
-		}, 20);
-
-		// Start the circle fill animation
-		Animated.timing(animatedValue, {
-			toValue: 1,
-			duration: 2000,
-			useNativeDriver: true,
-			easing: Easing.linear,
-		}).start();
-
-		// Enable button after animation completes (2 seconds)
-		const buttonTimer = setTimeout(() => {
-			setButtonEnabled(true);
-		}, 2000);
+		}, updateInterval);
 
 		return () => {
 			clearInterval(timer);
-			clearTimeout(buttonTimer);
 		};
 	}, []);
 
