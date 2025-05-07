@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useRef, useState } from 'react';
 import {
+	Keyboard,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -20,6 +22,20 @@ const WeightStep: React.FC<WeightStepProps> = ({
 }) => {
 	const [weightValue, setWeightValue] = useState(weight.value);
 	const [unit, setUnit] = useState(weight.unit);
+	const [isFocused, setIsFocused] = useState(false);
+
+	const weightInputRef = useRef<TextInput>(null);
+
+	useFocusEffect(
+		useCallback(() => {
+			// Automatically focus the weight input when the screen comes into focus
+			const timer = setTimeout(() => {
+				weightInputRef.current?.focus();
+			}, 500); // Delay to ensure screen transition is complete
+
+			return () => clearTimeout(timer); // Cleanup the timer when the screen goes out of focus
+		}, [])
+	);
 
 	const handleWeightChange = (text: string) => {
 		const newValue = text.replace(/[^0-9.]/g, '');
@@ -30,6 +46,14 @@ const WeightStep: React.FC<WeightStepProps> = ({
 	const selectUnit = (selectedUnit: string) => {
 		setUnit(selectedUnit);
 		updateWeight({ value: weightValue, unit: selectedUnit });
+	};
+
+	const handleFocus = () => {
+		setIsFocused(true);
+	};
+
+	const handleBlur = () => {
+		setIsFocused(false);
 	};
 
 	return (
@@ -53,12 +77,17 @@ const WeightStep: React.FC<WeightStepProps> = ({
 
 			<View style={styles.inputContainer}>
 				<TextInput
-					style={styles.weightInput}
+					ref={weightInputRef}
+					style={[styles.weightInput, isFocused && styles.focusedInput]}
 					placeholder="Weight"
 					placeholderTextColor="#777"
 					value={weightValue}
 					onChangeText={handleWeightChange}
 					keyboardType="decimal-pad"
+					onFocus={handleFocus}
+					onBlur={handleBlur}
+					returnKeyType="done"
+					onSubmitEditing={Keyboard.dismiss}
 				/>
 			</View>
 
@@ -76,30 +105,34 @@ const WeightStep: React.FC<WeightStepProps> = ({
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingHorizontal: 20,
+		padding: 20,
 		justifyContent: 'space-between',
+		backgroundColor: '#000000',
 	},
 	title: {
-		fontSize: 32,
+		fontSize: 28,
 		fontWeight: 'bold',
 		color: 'white',
 		textAlign: 'center',
-		marginTop: 50,
+		marginTop: 60,
 	},
 	unitSelector: {
 		flexDirection: 'row',
-		borderRadius: 20,
+		borderRadius: 30,
 		overflow: 'hidden',
-		marginVertical: 50,
+		marginVertical: 20,
+		borderWidth: 1,
+		borderColor: '#333',
+		backgroundColor: '#1C1C1E',
 	},
 	unitButton: {
 		flex: 1,
 		paddingVertical: 15,
 		alignItems: 'center',
-		backgroundColor: '#222',
+		backgroundColor: '#1C1C1E',
 	},
 	selectedUnit: {
-		backgroundColor: '#1C1C1E',
+		backgroundColor: '#333',
 	},
 	unitText: {
 		color: 'white',
@@ -121,8 +154,12 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'center',
 	},
+	focusedInput: {
+		borderColor: '#FF5722',
+		borderWidth: 2,
+	},
 	continueButton: {
-		backgroundColor: '#E84118',
+		backgroundColor: '#FF5722',
 		borderRadius: 30,
 		paddingVertical: 18,
 		alignItems: 'center',
