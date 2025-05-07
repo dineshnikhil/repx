@@ -167,19 +167,19 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#000',
-		paddingHorizontal: 20,
+		paddingHorizontal: 15
 	},
 	header: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		marginTop: 50,
+		marginTop: 70,
 		marginBottom: 20,
 	},
 	backButton: {
-		width: 40,
-		height: 40,
-		borderRadius: 20,
+		width: 45,
+		height: 45,
+		borderRadius: 25,
 		backgroundColor: '#1C1C1E',
 		justifyContent: 'center',
 		alignItems: 'center',

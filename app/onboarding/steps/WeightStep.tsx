@@ -118,30 +118,32 @@ const styles = StyleSheet.create({
 	},
 	unitSelector: {
 		flexDirection: 'row',
-		borderRadius: 30,
+		borderRadius: 10,
 		overflow: 'hidden',
 		marginVertical: 20,
-		borderWidth: 1,
-		borderColor: '#333',
-		backgroundColor: '#1C1C1E',
+		backgroundColor: 'white',
+		paddingHorizontal: 10,
+		paddingVertical: 5,
 	},
 	unitButton: {
 		flex: 1,
 		paddingVertical: 15,
 		alignItems: 'center',
-		backgroundColor: '#1C1C1E',
+		backgroundColor: 'white',
+		borderRadius: 10,
 	},
 	selectedUnit: {
-		backgroundColor: '#333',
+		backgroundColor: '#FF5722',
 	},
 	unitText: {
-		color: 'white',
-		fontSize: 18,
+		color: 'black',
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	inputContainer: {
 		flex: 1,
 		justifyContent: 'center',
+		marginBottom: 200,
 	},
 	weightInput: {
 		width: '100%',
@@ -161,13 +163,13 @@ const styles = StyleSheet.create({
 	continueButton: {
 		backgroundColor: '#FF5722',
 		borderRadius: 30,
-		paddingVertical: 18,
+		paddingVertical: 15,
 		alignItems: 'center',
 		marginBottom: 40,
 	},
 	continueText: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });

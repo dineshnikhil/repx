@@ -176,13 +176,13 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 28,
 		fontWeight: 'bold',
-		marginTop: 60,
-		marginBottom: 60,
+		marginTop: 20,
+		marginBottom: 0,
 		textAlign: 'center',
 		color: 'white',
 	},
 	inputContainer: {
-		marginBottom: 30,
+		marginBottom: 300,
 	},
 	inputLabel: {
 		fontSize: 16,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginBottom: 20,
+		marginBottom: 40,
 	},
 	disabledButton: {
 		opacity: 0.7,

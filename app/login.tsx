@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		color: '#FFF',
-		fontSize: 16,
+		fontSize: 12,
 		marginBottom: 10,
 	},
 	input: {
@@ -165,10 +165,10 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: '#333',
 		borderRadius: 12,
-		paddingVertical: 15,
+		paddingVertical: 12,
 		paddingHorizontal: 20,
 		color: '#FFF',
-		fontSize: 16,
+		fontSize: 14,
 	},
 	focusedInput: {
 		borderColor: '#FF6B00',
@@ -226,13 +226,13 @@ const styles = StyleSheet.create({
 	loginButton: {
 		backgroundColor: '#FF6B00',
 		borderRadius: 12,
-		paddingVertical: 16,
+		paddingVertical: 12,
 		alignItems: 'center',
-		marginVertical: 20,
+		marginVertical: 5,
 	},
 	loginButtonText: {
 		color: '#FFF',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	orText: {
