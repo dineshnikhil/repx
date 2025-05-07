@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: '48%',
-		paddingVertical: 20,
-		borderRadius: 15,
+		paddingVertical: 12,
+		borderRadius: 12,
 		alignItems: 'center',
 	},
 	noButton: {
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		color: 'white',
-		fontSize: 20,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });

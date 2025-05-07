@@ -65,13 +65,13 @@ const WeightStep: React.FC<WeightStepProps> = ({
 					style={[styles.unitButton, unit === 'kg' && styles.selectedUnit]}
 					onPress={() => selectUnit('kg')}
 				>
-					<Text style={styles.unitText}>Kg</Text>
+					<Text style={[styles.unitText, unit === 'kg' && styles.selectedUnitText]}>Kg</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[styles.unitButton, unit === 'lbs' && styles.selectedUnit]}
 					onPress={() => selectUnit('lbs')}
 				>
-					<Text style={styles.unitText}>Lbs</Text>
+					<Text style={[styles.unitText, unit === 'lbs' && styles.selectedUnitText]}>Lbs</Text>
 				</TouchableOpacity>
 			</View>
 
@@ -124,16 +124,29 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		paddingHorizontal: 10,
 		paddingVertical: 5,
+		position: 'relative',
+	},
+	selectionIndicator: {
+		position: 'absolute',
+		width: '50%',
+		height: '100%',
+		backgroundColor: 'black',
+		borderRadius: 10,
+		zIndex: 1,
 	},
 	unitButton: {
 		flex: 1,
-		paddingVertical: 15,
+		paddingVertical: 10,
 		alignItems: 'center',
-		backgroundColor: 'white',
+		backgroundColor: 'transparent',
 		borderRadius: 10,
+		zIndex: 2,
 	},
 	selectedUnit: {
-		backgroundColor: '#FF5722',
+		backgroundColor: 'black',
+	},
+	selectedUnitText: {
+		color: 'white',
 	},
 	unitText: {
 		color: 'black',
@@ -162,7 +175,7 @@ const styles = StyleSheet.create({
 	},
 	continueButton: {
 		backgroundColor: '#FF5722',
-		borderRadius: 30,
+		borderRadius: 12,
 		paddingVertical: 15,
 		alignItems: 'center',
 		marginBottom: 40,

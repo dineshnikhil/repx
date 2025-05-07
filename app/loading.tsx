@@ -3,11 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
 import {
 	Animated,
-	Easing,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
-	View,
+	View
 } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
 		position: 'relative',
 	},
 	progressText: {
-		fontSize: 56,
+		fontSize: 40,
 		fontWeight: 'bold',
 		color: 'white',
 		position: 'absolute',
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
 	},
 	startButtonText: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });
