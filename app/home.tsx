@@ -12,7 +12,9 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import Svg, { Circle, Line, Path } from 'react-native-svg';
+// Remove Svg imports if no longer used elsewhere in this file
+// import Svg, { Circle, Line, Path } from 'react-native-svg'; 
+import InteractiveBodyWeightChart from '../components/InteractiveBodyWeightChart'; // Adjust path if necessary
 
 // Helper function to generate dynamic calendar days for the current week
 const generateCalendarDays = () => {
@@ -53,112 +55,8 @@ const timeRangeOptions = [
     { label: '6 Months', value: '6months', days: 180 },
 ];
 
-// Updated BodyWeightGraph component
-const BodyWeightGraph = ({ selectedRange }: { selectedRange: string }) => {
-    const [weightData, setWeightData] = useState([]);
-
-    useEffect(() => {
-        const generateDataForRange = () => {
-            const numDays = timeRangeOptions.find(opt => opt.value === selectedRange)?.days || 7;
-            const data = [];
-            const today = new Date();
-            for (let i = numDays - 1; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(today.getDate() - i);
-                // Simplified random weight generation for example
-                const weight = 90 + Math.random() * 5 - 2.5; // Random weight around 90-95
-                data.push({
-                    date: date.toISOString().split('T')[0],
-                    weight_kg: parseFloat(weight.toFixed(1)),
-                });
-            }
-            setWeightData(data as Array<{date: string; weight_kg: number}> as any);
-        };
-        generateDataForRange();
-    }, [selectedRange]);
-
-    if (weightData.length === 0) {
-        return <Text style={styles.loadingText}>Loading graph data...</Text>; // Or a loading indicator
-    }
-
-    const graphWidth = 300;
-    const graphHeight = 120;
-
-    const maxWeight = Math.max(...weightData.map(d => d.weight_kg), 0) + 2;
-    const minWeight = Math.min(...weightData.map(d => d.weight_kg), Infinity) - 2;
-
-    const getX = (index) => (index / (weightData.length - 1)) * (graphWidth - 2 * padding) + padding;
-    const getY = (weight) => graphHeight - ((weight - minWeight) / (maxWeight - minWeight)) * (graphHeight - 2 * padding) - padding;
-
-    let pathD = "M";
-    if (weightData.length > 1) {
-        weightData.forEach((point, index) => {
-            const x = getX(index);
-            const y = getY(point.weight_kg);
-            pathD += `${x},${y} `;
-        });
-    } else if (weightData.length === 1) {
-        // Handle single data point - draw a circle or a short horizontal line
-        const x = getX(0);
-        const y = getY(weightData[0].weight_kg);
-        pathD = `M${x -1},${y} L${x+1},${y}`; // Or just render a circle
-    }
-
-
-    return (
-        <View style={styles.graphContainer}>
-            <Svg height={graphHeight} width={graphWidth}>
-                {[...Array(5)].map((_, i) => (
-                    <Line
-                        key={`grid-${i}`}
-                        x1={padding}
-                        y1={padding + (i * (graphHeight - 2 * padding)) / 4}
-                        x2={graphWidth - padding}
-                        y2={padding + (i * (graphHeight - 2 * padding)) / 4}
-                        stroke="#3A3A3C"
-                        strokeDasharray="4, 4"
-                        strokeWidth="1"
-                    />
-                ))}
-                {weightData.length > 0 && <Path d={pathD.trim()} fill="none" stroke="#FF6B00" strokeWidth="2.5" />}
-                {weightData.map((point, index) => (
-                    <Circle
-                        key={`point-${index}`}
-                        cx={getX(index)}
-                        cy={getY(point.weight_kg)}
-                        r="4"
-                        fill="#FF6B00"
-                    />
-                ))}
-            </Svg>
-            <View style={styles.xAxisLabelsContainer}>
-                {weightData.length > 1 && weightData.map((point, index) => {
-                    // Show fewer labels for longer ranges to avoid clutter
-                    const numDays = timeRangeOptions.find(opt => opt.value === selectedRange)?.days || 7;
-                    if (numDays <= 30 && index % Math.floor(numDays / 7) === 0) { // e.g., weekly for month
-                         return (
-                            <Text key={`label-${index}`} style={styles.xAxisLabel}>
-                                {new Date(point.date).getDate()}
-                            </Text>
-                        );
-                    } else if (numDays > 30 && index % Math.floor(numDays / 10) === 0) { // Fewer labels for >1 month
-                         return (
-                            <Text key={`label-${index}`} style={styles.xAxisLabel}>
-                                {new Date(point.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}
-                            </Text>
-                        );
-                    }
-                    return null;
-                })}
-                 {weightData.length === 1 && (
-                    <Text style={styles.xAxisLabel}>
-                        {new Date(weightData[0].date).toLocaleDateString('en-US', { month: 'short', day: 'numeric'})}
-                    </Text>
-                )}
-            </View>
-        </View>
-    );
-};
+// REMOVE THE ENTIRE BodyWeightGraph COMPONENT HERE
+// const BodyWeightGraph = ({ selectedRange }: { selectedRange: string }) => { ... };
 
 export default function HomeScreen() {
     const days = generateCalendarDays();
@@ -171,8 +69,8 @@ export default function HomeScreen() {
 
     const handleTimeRangeButtonPress = () => {
         if (timeRangeButtonRef.current) {
-            timeRangeButtonRef.current.measure((fx, fy, width, height, px, py) => {
-                setTimeRangeButtonLayout({ x: px, y: py, width, height });
+            (timeRangeButtonRef.current as any).measure((fx: number, fy: number, width: number, height: number, px: number, py: number) => {
+                setTimeRangeButtonLayout({ x: px, y: py, width, height } as any);
                 setIsDropdownVisible(true);
             });
         }
@@ -240,7 +138,8 @@ export default function HomeScreen() {
                             <Feather name="chevron-down" size={16} color="#8E8E93" />
                         </TouchableOpacity>
                     </View>
-                    <BodyWeightGraph selectedRange={selectedRange} />
+                    {/* Replace BodyWeightGraph with InteractiveBodyWeightChart */}
+                    <InteractiveBodyWeightChart selectedRange={selectedRange} />
                     {/* ... Current Weight and Track Today Button ... */}
                      <View style={styles.currentWeightContainer}>
                         <View>
@@ -281,8 +180,8 @@ export default function HomeScreen() {
                             styles.dropdownContainer,
                             {
                                 position: 'absolute',
-                                top: timeRangeButtonLayout.y + timeRangeButtonLayout.height + 5, // 5px gap
-                                right: screenWidth - (timeRangeButtonLayout.x + timeRangeButtonLayout.width),
+                                top: (timeRangeButtonLayout as {y: number; height: number}).y + (timeRangeButtonLayout as {y: number; height: number}).height + 5, // 5px gap
+                                right: screenWidth - ((timeRangeButtonLayout as {x: number; width: number}).x + (timeRangeButtonLayout as {x: number; width: number}).width),
                             }
                         ]}>
                             {timeRangeOptions.map((option) => (
