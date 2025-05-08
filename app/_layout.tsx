@@ -65,6 +65,8 @@ export default function RootLayout() {
 			<Stack.Screen name="register" />
 			<Stack.Screen name="loading" />
 			<Stack.Screen name="onboarding" />
+			<Stack.Screen name="profile" />
+			<Stack.Screen name="home" />
 		</Stack>
 	);
 }

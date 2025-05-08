@@ -12,6 +12,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 // Remove Svg imports if no longer used elsewhere in this file
 // import Svg, { Circle, Line, Path } from 'react-native-svg'; 
 import InteractiveBodyWeightChart from '../components/InteractiveBodyWeightChart'; // Adjust path if necessary
@@ -55,11 +56,10 @@ const timeRangeOptions = [
     { label: '6 Months', value: '6months', days: 180 },
 ];
 
-// REMOVE THE ENTIRE BodyWeightGraph COMPONENT HERE
-// const BodyWeightGraph = ({ selectedRange }: { selectedRange: string }) => { ... };
-
 export default function HomeScreen() {
+    const router = useRouter();
     const days = generateCalendarDays();
+    const [userName, setUserName] = useState('Dinesh Nikhil');
     const [selectedRange, setSelectedRange] = useState(timeRangeOptions[0].value); // Default to 'week'
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const [timeRangeButtonLayout, setTimeRangeButtonLayout] = useState(null);
@@ -82,7 +82,11 @@ export default function HomeScreen() {
                 {/* ... Header and Calendar ... */}
                  <View style={styles.header}>
                     <View style={styles.profileInfo}>
-                        <View style={styles.profilePicPlaceholder} />
+                        <TouchableOpacity 
+                            style={styles.profilePicPlaceholder}
+                            onPress={() => router.push('/profile')}
+                            activeOpacity={0.7}
+                        />
                         <View>
                             <Text style={styles.greetingText}>Good Morning,</Text>
                             <Text style={styles.userNameText}>{userName}</Text>
