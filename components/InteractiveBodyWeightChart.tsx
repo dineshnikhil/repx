@@ -136,22 +136,22 @@ const InteractiveBodyWeightChart: React.FC<InteractiveBodyWeightChartProps> = ({
     }
 
     const screenWidth = Dimensions.get('window').width;
-    // Adjust width to account for container padding to match the homepage image exactly
-    const chartWidth = screenWidth - 100; // Reduced padding to make chart appear more to the left
-    const endPadding = 60; // Increased end padding to compensate for moving left
+    // Adjust chart size to make it significantly bigger while maintaining position
+    const chartWidth = screenWidth + 160; // Substantially increased width for bigger chart
+    const endPadding = 260; // Increased end padding to compensate for the wider chart
 
     return (
         <View style={styles.chartContainer}>
             <LineChart
                 data={chartData}
                 width={chartWidth}
-                height={100} // Reduce height to match the homepage image
-                initialSpacing={16} // Initial spacing
-                spacing={chartData.length > 1 ? (chartWidth - 32 - endPadding) / (chartData.length -1) : chartWidth - 32 - endPadding} // Account for end padding
+                height={130} // Increased height to make chart appear bigger
+                initialSpacing={10} // Further reduced initial spacing for wider chart
+                spacing={chartData.length > 1 ? (chartWidth - 20 - endPadding) / (chartData.length -1) : chartWidth - 20 - endPadding} // Adjusted spacing for wider chart
                 textColor="#8E8E93"
                 textFontSize={10}
                 color="#FF6B00"
-                thickness={2.5}
+                thickness={4} // Further increased line thickness for a bolder appearance
                 curved={true}
                 curvature={0.5}
                 // Use type assertion to fix TypeScript error
@@ -168,14 +168,14 @@ const InteractiveBodyWeightChart: React.FC<InteractiveBodyWeightChartProps> = ({
                 stepValue={(maxValue - minValue) / 3} // Calculate the step value to match noOfSections
                 yAxisOffset={minValue} // Set the starting value of Y-axis
                 yAxisLabelTexts={yAxisLabels} // Ensure this is ordered top-to-bottom
-                yAxisLabelWidth={35} 
+                yAxisLabelWidth={0} 
 
                 // invertYAxis // This prop might be useful if the library has it and behavior is inverted
                 
                 hideDataPoints
                 focusEnabled 
                 showStripOnFocus
-                stripHeight={110} // Match the chart height
+                stripHeight={130} // Match the increased chart height
                 stripWidth={1}
                 stripColor="rgba(255, 107, 0, 0.3)"
                 // showTextOnFocus // We use pointerLabelComponent for custom tooltip
@@ -184,7 +184,7 @@ const InteractiveBodyWeightChart: React.FC<InteractiveBodyWeightChartProps> = ({
                 focusedDataPointColor="#FF6B00" // Orange color for focused point
                 focusedDataPointRadius={3}
                 pointerConfig={{
-                    pointerStripHeight: 110, // Aligned with chart height
+                    pointerStripHeight: 130, // Aligned with increased chart height
                     pointerStripColor: 'rgba(255, 107, 0, 0.2)',
                     pointerStripWidth: 1,
                     pointerColor: '#FF6B00',
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     chartContainer: {
         marginVertical: 10, // Reduced vertical margin
         paddingLeft: 5, // Left padding reduced to move chart left
-        paddingRight: 60, // Right padding increased to balance
+        paddingRight: 200, // Right padding increased to balance
         alignItems: 'flex-start', // Align to the start (left) instead of center
         justifyContent: 'center', // Center vertically
         width: '100%', // Take up full width of parent container
