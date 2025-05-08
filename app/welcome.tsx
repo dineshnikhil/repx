@@ -1,3 +1,5 @@
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
@@ -5,7 +7,12 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function WelcomeScreen() {
 	return (
-		<View style={styles.container}>
+		<LinearGradient
+			colors={['#0057FF', '#0073E6']}
+			// colors={['#0a0a0a', '#FF5722']}
+			style={styles.container}
+		>
+			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
 			<StatusBar style="light" />
 
 			<View style={styles.logoContainer}>
@@ -36,14 +43,14 @@ export default function WelcomeScreen() {
 			>
 				<Text style={styles.buttonText}>Get Started</Text>
 			</TouchableOpacity>
-		</View>
+		</LinearGradient>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#000',
+		// backgroundColor: '#000', // Removed solid background color
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingVertical: 50,
@@ -72,11 +79,11 @@ const styles = StyleSheet.create({
 	trackText: {
 		fontSize: 40,
 		fontWeight: 'bold',
-		color: '#FF5722',
+		color: '#e3ffa8',
 	},
 	everyRepText: {
 		fontSize: 28,
-		color: '#AAA',
+		color: '#e8f0ff',
 	},
 	progressRow: {
 		flexDirection: 'row',
@@ -84,15 +91,15 @@ const styles = StyleSheet.create({
 	},
 	unlockText: {
 		fontSize: 28,
-		color: '#AAA',
+		color: '#e8f0ff',
 	},
 	progressText: {
 		fontSize: 40,
 		fontWeight: 'bold',
-		color: '#FF5722',
+		color: '#e3ffa8',
 	},
 	button: {
-		backgroundColor: '#FF5722',
+		backgroundColor: '#FFFFFF',
 		paddingVertical: 16,
 		paddingHorizontal: 50,
 		borderRadius: 12,
@@ -101,7 +108,7 @@ const styles = StyleSheet.create({
 		marginBottom: 40,
 	},
 	buttonText: {
-		color: '#FFF',
+		color: '#0057FF',
 		fontSize: 22,
 		fontWeight: 'bold',
 	},

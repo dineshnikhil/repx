@@ -1,17 +1,25 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { router } from 'expo-router'; // Add this import
 
 interface FitnessLevelStepProps {
 	fitnessLevel: string;
 	updateFitnessLevel: (level: string) => void;
-	onContinue: () => void;
+	onContinue: () => void; // This prop might be directly calling router.push or similar
 }
 
 const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 	fitnessLevel,
 	updateFitnessLevel,
-	onContinue,
+	onContinue, // We will modify how this is called or what it does
 }) => {
+	const handleContinue = () => {
+		// Navigate to the new home screen
+		router.replace('/home'); // Or router.push('/home') depending on desired stack behavior
+		// If onContinue has other responsibilities, call it before or after navigation
+		// onContinue(); 
+	};
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>What's your fitness level?</Text>
@@ -33,7 +41,7 @@ const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 						fitnessLevel === 'intermediate' ? styles.selectedLevel : {},
 					]}
 					onPress={() => updateFitnessLevel('intermediate')}
->
+				>
 					<Text style={styles.levelText}>Intermediate</Text>
 				</TouchableOpacity>
 
@@ -48,7 +56,7 @@ const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 				</TouchableOpacity>
 			</View>
 
-			<TouchableOpacity style={styles.continueButton} onPress={onContinue}>
+			<TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
 				<Text style={styles.continueText}>Next Step</Text>
 			</TouchableOpacity>
 		</View>
