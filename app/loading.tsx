@@ -3,11 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
 import {
 	Animated,
-	Easing,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
-	View,
+	View
 } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 
@@ -15,6 +14,7 @@ export default function LoadingScreen() {
 	// Animation values
 	const [percentage, setPercentage] = useState(0);
 	const animatedValue = useRef(new Animated.Value(0)).current;
+	const [buttonEnabled, setButtonEnabled] = useState(false);
 
 	// Constants for the circle
 	const CIRCLE_SIZE = 200;
@@ -24,24 +24,30 @@ export default function LoadingScreen() {
 
 	// Navigate to onboarding after animation completes
 	useEffect(() => {
-		// Start the counter animation
+		// Animation duration in milliseconds
+		const animationDuration = 2000;
+		// Total steps for percentage (0-100)
+		const totalSteps = 100;
+		// Calculate interval for smooth percentage updates
+		const updateInterval = animationDuration / totalSteps;
+		
+		// Start the counter animation synchronized with progress bar
 		const timer = setInterval(() => {
 			setPercentage((prev) => {
-				if (prev >= 75) {
+				const newPercentage = prev + 1;
+				
+				// Update the animated value to match the percentage
+				animatedValue.setValue(newPercentage / 100);
+				
+				if (newPercentage >= 100) {
 					clearInterval(timer);
-					return 75;
+					// Enable button only after reaching 100%
+					setButtonEnabled(true);
+					return 100;
 				}
-				return prev + 1;
+				return newPercentage;
 			});
-		}, 20);
-
-		// Start the circle fill animation
-		Animated.timing(animatedValue, {
-			toValue: 0.75,
-			duration: 1500,
-			useNativeDriver: true,
-			easing: Easing.linear,
-		}).start();
+		}, updateInterval);
 
 		return () => {
 			clearInterval(timer);
@@ -107,10 +113,13 @@ export default function LoadingScreen() {
 			</View>
 
 			<TouchableOpacity
-				style={styles.startButton}
+				style={[styles.startButton, !buttonEnabled && styles.disabledButton]}
 				onPress={handleStartTracking}
+				disabled={!buttonEnabled}
 			>
-				<Text style={styles.startButtonText}>Start Tracking</Text>
+				<Text style={styles.startButtonText}>
+					{buttonEnabled ? 'Start Tracking' : 'Please wait...'}
+				</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -127,6 +136,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: 30,
 		paddingBottom: 50,
+	},
+	disabledButton: {
+		backgroundColor: '#666',
+		opacity: 0.7,
 	},
 	contentContainer: {
 		alignItems: 'center',
@@ -149,7 +162,7 @@ const styles = StyleSheet.create({
 		position: 'relative',
 	},
 	progressText: {
-		fontSize: 56,
+		fontSize: 40,
 		fontWeight: 'bold',
 		color: 'white',
 		position: 'absolute',
@@ -169,7 +182,7 @@ const styles = StyleSheet.create({
 	},
 	startButtonText: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });

@@ -27,7 +27,7 @@ const GenderStep: React.FC<GenderStepProps> = ({
 					<Text style={styles.genderText}>Female</Text>
 					<Image
 						source={require('../../../assets/images/female.png')}
-						style={styles.genderImage}
+						style={styles.FemaleGenderImage}
 						resizeMode="cover"
 					/>
 				</TouchableOpacity>
@@ -42,7 +42,7 @@ const GenderStep: React.FC<GenderStepProps> = ({
 					<Text style={styles.genderText}>Male</Text>
 					<Image
 						source={require('../../../assets/images/male.png')}
-						style={styles.genderImage}
+						style={styles.MaleGenderImage}
 						resizeMode="cover"
 					/>
 				</TouchableOpacity>
@@ -76,11 +76,11 @@ const styles = StyleSheet.create({
 	optionsContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginBottom: 60,
+		marginBottom: 40,
 	},
 	genderOption: {
 		width: '47%',
-		height: 460,
+		height: 300,
 		borderRadius: 20,
 		borderWidth: 1,
 		borderColor: '#444',
@@ -98,15 +98,22 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		marginBottom: 20,
 	},
-	genderImage: {
-		width: '100%',
-		height: 380,
+	MaleGenderImage: {
+		width: '150%',
+		height: 400,
+		borderRadius: 15,
+		position: 'absolute',
+		bottom: -165,
+	},
+	FemaleGenderImage: {
+		width: '100%',	
+		height: 280,
 		borderRadius: 15,
 	},
 	continueButton: {
 		backgroundColor: '#E84118',
-		borderRadius: 30,
-		paddingVertical: 18,
+		borderRadius: 12,
+		paddingVertical: 16,
 		alignItems: 'center',
 		marginTop: 'auto',
 		marginBottom: 40,
@@ -116,7 +123,7 @@ const styles = StyleSheet.create({
 	},
 	continueText: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });

@@ -1,3 +1,5 @@
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
@@ -5,7 +7,12 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function WelcomeScreen() {
 	return (
-		<View style={styles.container}>
+		<LinearGradient
+			colors={['#0057FF', '#0073E6']}
+			// colors={['#0a0a0a', '#FF5722']}
+			style={styles.container}
+		>
+			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
 			<StatusBar style="light" />
 
 			<View style={styles.logoContainer}>
@@ -36,14 +43,14 @@ export default function WelcomeScreen() {
 			>
 				<Text style={styles.buttonText}>Get Started</Text>
 			</TouchableOpacity>
-		</View>
+		</LinearGradient>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#000',
+		// backgroundColor: '#000', // Removed solid background color
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		paddingVertical: 50,
@@ -54,7 +61,7 @@ const styles = StyleSheet.create({
 		marginTop: 30,
 	},
 	logoText: {
-		fontSize: 64,
+		fontSize: 100,
 		fontWeight: 'bold',
 		color: '#FFF',
 	},
@@ -68,41 +75,40 @@ const styles = StyleSheet.create({
 	trackRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginBottom: 10,
 	},
 	trackText: {
 		fontSize: 40,
 		fontWeight: 'bold',
-		color: '#FF6B00',
+		color: '#e3ffa8',
 	},
 	everyRepText: {
-		fontSize: 36,
-		color: '#AAA',
+		fontSize: 28,
+		color: '#e8f0ff',
 	},
 	progressRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 	unlockText: {
-		fontSize: 36,
-		color: '#AAA',
+		fontSize: 28,
+		color: '#e8f0ff',
 	},
 	progressText: {
 		fontSize: 40,
 		fontWeight: 'bold',
-		color: '#FF6B00',
+		color: '#e3ffa8',
 	},
 	button: {
-		backgroundColor: '#FF6B00',
-		paddingVertical: 18,
+		backgroundColor: '#FFFFFF',
+		paddingVertical: 16,
 		paddingHorizontal: 50,
-		borderRadius: 50,
+		borderRadius: 12,
 		width: '80%',
 		alignItems: 'center',
-		marginBottom: 20,
+		marginBottom: 40,
 	},
 	buttonText: {
-		color: '#FFF',
+		color: '#0057FF',
 		fontSize: 22,
 		fontWeight: 'bold',
 	},

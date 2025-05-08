@@ -1,4 +1,4 @@
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -12,10 +12,13 @@ import {
 } from 'react-native';
 
 export default function RegisterScreen() {
-	const [email, setEmail] = useState('dineshkumarpokkula@gmail.com');
+	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [rememberMe, setRememberMe] = useState(false);
+	const [focusedInput, setFocusedInput] = useState('');
 
 	const handleRegister = () => {
 		// For now, just navigate to loading screen
@@ -31,41 +34,64 @@ export default function RegisterScreen() {
 				<AntDesign name="left" size={24} color="white" />
 			</TouchableOpacity>
 
-			<Text style={styles.title}>Create your account</Text>
+			<Text style={styles.title}>Create your{"\n"}account</Text>
 
 			<View style={styles.formContainer}>
 				<View style={styles.inputGroup}>
 					<Text style={styles.label}>Your Number / email address</Text>
 					<TextInput
-						style={styles.input}
+						style={[styles.input, focusedInput === 'email' && styles.focusedInput]}
 						value={email}
 						onChangeText={setEmail}
 						keyboardType="email-address"
 						autoCapitalize="none"
+						placeholder="example@gmail.com"
 						placeholderTextColor="#666"
+						onFocus={() => setFocusedInput('email')}
+						onBlur={() => setFocusedInput('')}
 					/>
 				</View>
 
 				<View style={styles.inputGroup}>
 					<Text style={styles.label}>Enter your Password</Text>
-					<TextInput
-						style={styles.input}
-						value={password}
-						onChangeText={setPassword}
-						secureTextEntry
-						placeholderTextColor="#666"
-					/>
+					<View style={[styles.inputWrapper, focusedInput === 'password' && styles.focusedInputWrapper]}>
+						<TextInput
+							style={styles.input}
+							value={password}
+							onChangeText={setPassword}
+							secureTextEntry={!showPassword}
+							placeholderTextColor="#666"
+							onFocus={() => setFocusedInput('password')}
+							onBlur={() => setFocusedInput('')}
+						/>
+						<TouchableOpacity 
+							style={styles.eyeIcon} 
+							onPress={() => setShowPassword(!showPassword)}
+						>
+							<Feather name={showPassword ? "eye" : "eye-off"} size={20} color="#666" />
+						</TouchableOpacity>
+					</View>
 				</View>
 
 				<View style={styles.inputGroup}>
 					<Text style={styles.label}>Confirm your Password</Text>
-					<TextInput
-						style={styles.input}
-						value={confirmPassword}
-						onChangeText={setConfirmPassword}
-						secureTextEntry
-						placeholderTextColor="#666"
-					/>
+					<View style={[styles.inputWrapper, focusedInput === 'confirmPassword' && styles.focusedInputWrapper]}>
+						<TextInput
+							style={styles.input}
+							value={confirmPassword}
+							onChangeText={setConfirmPassword}
+							secureTextEntry={!showConfirmPassword}
+							placeholderTextColor="#666"
+							onFocus={() => setFocusedInput('confirmPassword')}
+							onBlur={() => setFocusedInput('')}
+						/>
+						<TouchableOpacity 
+							style={styles.eyeIcon} 
+							onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+						>
+							<Feather name={showConfirmPassword ? "eye" : "eye-off"} size={20} color="#666" />
+						</TouchableOpacity>
+					</View>
 				</View>
 
 				<View style={styles.rememberContainer}>
@@ -94,7 +120,7 @@ export default function RegisterScreen() {
 				<TouchableOpacity style={styles.socialButton}>
 					<Image
 						source={{
-							uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+							uri: 'https://upload.wikimedia.org/wikipedia/commons/d/dc/Google-g-icon.png',
 						}}
 						style={styles.socialIcon}
 					/>
@@ -112,7 +138,7 @@ export default function RegisterScreen() {
 				</TouchableOpacity>
 
 				<View style={styles.accountToggleContainer}>
-					<Text style={styles.accountToggleText}>Already have an account?</Text>
+					<Text style={styles.accountToggleText}>Already have an account? </Text>
 					<TouchableOpacity onPress={() => router.push('/login')}>
 						<Text style={styles.accountToggleLink}>Login</Text>
 					</TouchableOpacity>
@@ -129,21 +155,21 @@ const styles = StyleSheet.create({
 		padding: 20,
 	},
 	backButton: {
-		width: 50,
-		height: 50,
+		width: 45,
+		height: 45,
 		borderRadius: 25,
 		backgroundColor: '#1C1C1E',
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginBottom: 30,
-		marginTop: 20,
+		marginTop: 50,
 	},
 	formContainer: {
 		flex: 1,
-		paddingHorizontal: 10,
+		paddingHorizontal: 0,
 	},
 	title: {
-		fontSize: 40,
+		fontSize: 36,
 		fontWeight: '600',
 		color: '#FFF',
 		marginBottom: 40,
@@ -153,32 +179,53 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		color: '#FFF',
-		fontSize: 16,
+		fontSize: 12,
 		marginBottom: 10,
 	},
 	input: {
 		backgroundColor: '#111',
 		borderWidth: 1,
-		borderColor: '#FF6B00',
+		borderColor: '#333',
 		borderRadius: 12,
-		paddingVertical: 15,
+		paddingVertical: 12,
 		paddingHorizontal: 20,
 		color: '#FFF',
-		fontSize: 16,
+		fontSize: 14,
+	},
+	focusedInput: {
+		borderColor: '#FF6B00',
+	},
+	inputWrapper: {
+		position: 'relative',
+		backgroundColor: '#111',
+		borderWidth: 1,
+		borderColor: '#333',
+		borderRadius: 12,
+	},
+	focusedInputWrapper: {
+		borderColor: '#FF6B00',
+	},
+	eyeIcon: {
+		position: 'absolute',
+		right: 15,
+		top: 0,
+		height: '100%',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	rememberContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		marginVertical: 20,
+		marginVertical: 15,
 	},
 	checkboxContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 	checkbox: {
-		width: 24,
-		height: 24,
+		width: 20,
+		height: 20,
 		borderWidth: 1,
 		borderColor: '#555',
 		borderRadius: 4,
@@ -192,57 +239,57 @@ const styles = StyleSheet.create({
 	},
 	checkboxLabel: {
 		color: '#FFF',
-		fontSize: 16,
+		fontSize: 14,
 	},
 	registerButton: {
 		backgroundColor: '#FF6B00',
 		borderRadius: 12,
-		paddingVertical: 16,
+		paddingVertical: 12,
 		alignItems: 'center',
-		marginVertical: 20,
+		marginVertical: 5,
 	},
 	registerButtonText: {
 		color: '#FFF',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	orText: {
 		color: '#FFF',
+		fontSize: 14,
 		textAlign: 'center',
-		fontSize: 16,
-		marginVertical: 20,
+		marginVertical: 15,
 	},
 	socialButton: {
 		flexDirection: 'row',
-		backgroundColor: '#1C1C1E',
-		borderRadius: 12,
-		paddingVertical: 16,
-		paddingHorizontal: 20,
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginBottom: 15,
+		backgroundColor: '#1C1C1E',
+		borderRadius: 8,
+		paddingVertical: 14,
+		marginBottom: 12,
 	},
 	socialIcon: {
-		width: 24,
-		height: 24,
+		width: 20,
+		height: 20,
 		marginRight: 10,
 	},
 	socialButtonText: {
 		color: '#FFF',
-		fontSize: 16,
+		fontSize: 14,
 	},
 	accountToggleContainer: {
 		flexDirection: 'row',
 		justifyContent: 'center',
-		marginTop: 20,
+		marginTop: 15,
+		marginBottom: 10,
 	},
 	accountToggleText: {
-		color: '#FFF',
-		fontSize: 16,
+		color: '#999',
+		fontSize: 14,
 	},
 	accountToggleLink: {
 		color: '#FF6B00',
-		fontSize: 16,
-		marginLeft: 5,
+		fontSize: 14,
+		fontWeight: 'bold',
 	},
 });

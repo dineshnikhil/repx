@@ -25,7 +25,7 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
 							? require('../../../assets/images/wroking-female.png')
 							: require('../../../assets/images/working-male.png')
 					}
-					style={styles.image}
+					style={[[styles.MaleImage, gender === 'female' && styles.FemaleImage]]}
 					resizeMode="contain"
 				/>
 			</View>
@@ -37,7 +37,10 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
 						styles.noButton,
 						hasFitnessExperience === false && styles.selectedButton,
 					]}
-					onPress={() => updateExperience(false)}
+					onPress={() => {
+						updateExperience(false);
+						onContinue();
+					}}
 				>
 					<Text style={styles.buttonText}>No</Text>
 				</TouchableOpacity>
@@ -48,7 +51,10 @@ const ExperienceStep: React.FC<ExperienceStepProps> = ({
 						styles.yesButton,
 						hasFitnessExperience === true && styles.selectedButton,
 					]}
-					onPress={() => updateExperience(true)}
+					onPress={() => {
+						updateExperience(true);
+						onContinue();
+					}}
 				>
 					<Text style={styles.buttonText}>Yes</Text>
 				</TouchableOpacity>
@@ -75,9 +81,13 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	image: {
+	MaleImage: {
 		width: '100%',
 		height: '100%',
+	},
+	FemaleImage: {
+		width: '80%',
+		height: '80%',
 	},
 	buttonsContainer: {
 		flexDirection: 'row',
@@ -86,8 +96,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: '48%',
-		paddingVertical: 20,
-		borderRadius: 15,
+		paddingVertical: 16,
+		borderRadius: 12,
 		alignItems: 'center',
 	},
 	noButton: {
@@ -102,7 +112,7 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		color: 'white',
-		fontSize: 20,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });

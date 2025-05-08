@@ -1,17 +1,25 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { router } from 'expo-router'; // Add this import
 
 interface FitnessLevelStepProps {
 	fitnessLevel: string;
 	updateFitnessLevel: (level: string) => void;
-	onContinue: () => void;
+	onContinue: () => void; // This prop might be directly calling router.push or similar
 }
 
 const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 	fitnessLevel,
 	updateFitnessLevel,
-	onContinue,
+	onContinue, // We will modify how this is called or what it does
 }) => {
+	const handleContinue = () => {
+		// Navigate to the new home screen
+		router.replace('/home'); // Or router.push('/home') depending on desired stack behavior
+		// If onContinue has other responsibilities, call it before or after navigation
+		// onContinue(); 
+	};
+
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>What's your fitness level?</Text>
@@ -28,21 +36,27 @@ const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 				</TouchableOpacity>
 
 				<TouchableOpacity
-					style={styles.levelButton}
-					onPress={() => updateFitnessLevel('beginner')}
+					style={[
+						styles.levelButton,
+						fitnessLevel === 'intermediate' ? styles.selectedLevel : {},
+					]}
+					onPress={() => updateFitnessLevel('intermediate')}
 				>
-					<Text style={styles.levelText}>Beginner</Text>
+					<Text style={styles.levelText}>Intermediate</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
-					style={styles.levelButton}
-					onPress={() => updateFitnessLevel('beginner')}
+					style={[
+						styles.levelButton,
+						fitnessLevel === 'advanced' ? styles.selectedLevel : {},
+					]}
+					onPress={() => updateFitnessLevel('advanced')}
 				>
-					<Text style={styles.levelText}>Beginner</Text>
+					<Text style={styles.levelText}>Advance</Text>
 				</TouchableOpacity>
 			</View>
 
-			<TouchableOpacity style={styles.continueButton} onPress={onContinue}>
+			<TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
 				<Text style={styles.continueText}>Next Step</Text>
 			</TouchableOpacity>
 		</View>
@@ -60,16 +74,17 @@ const styles = StyleSheet.create({
 		color: 'white',
 		textAlign: 'center',
 		marginTop: 100,
-		marginBottom: 50,
+		marginBottom: 0,
 	},
 	levelsContainer: {
 		paddingHorizontal: 20,
 		gap: 20,
+		marginBottom: 70,
 	},
 	levelButton: {
 		backgroundColor: '#1C1C1E',
-		borderRadius: 15,
-		paddingVertical: 25,
+		borderRadius: 12,
+		paddingVertical: 20,
 		alignItems: 'center',
 	},
 	selectedLevel: {
@@ -78,20 +93,20 @@ const styles = StyleSheet.create({
 	},
 	levelText: {
 		color: 'white',
-		fontSize: 20,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	continueButton: {
 		backgroundColor: '#E84118',
-		borderRadius: 30,
+		borderRadius: 12,
 		marginHorizontal: 20,
-		paddingVertical: 18,
+		paddingVertical: 16,
 		alignItems: 'center',
 		marginBottom: 40,
 	},
 	continueText: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: 'bold',
 	},
 });
