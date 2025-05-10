@@ -1,7 +1,7 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 // Remove Animated and LayoutAnimation type if no longer used by a custom interpolator
 // import { Animated } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // type LayoutAnimation = {
 // 	current: { progress: Animated.AnimatedInterpolation<number> };
@@ -54,7 +54,35 @@ import React from 'react';
 // 	},
 // };
 
+// Define a global user profile type
+declare global {
+	// eslint-disable-next-line no-var
+	var userProfile:
+		| {
+				gender: string | null;
+				birthDate: { month: string; day: string; year: string };
+				weight: { value: string; unit: string };
+				hasFitnessExperience: boolean | null;
+				fitnessLevel: string;
+		  }
+		| Record<string, never>; // Allow empty object for initialization
+	// eslint-disable-next-line no-var
+	var currentOnboardingStep: number | undefined; // Allow undefined
+}
+
 export default function RootLayout() {
+	const router = useRouter();
+
+	useEffect(() => {
+		// Initialize global variables if they aren't already set
+		if (typeof global.userProfile === 'undefined') {
+			global.userProfile = {}; // Initialize with an empty object
+		}
+		if (typeof global.currentOnboardingStep === 'undefined') {
+			global.currentOnboardingStep = 1; // Or your desired default starting step
+		}
+	}, []);
+
 	return (
 		<Stack
 			screenOptions={{
@@ -70,8 +98,7 @@ export default function RootLayout() {
 			<Stack.Screen name="register" />
 			<Stack.Screen name="loading" />
 			<Stack.Screen name="onboarding" />
-			<Stack.Screen name="profile" />
-			<Stack.Screen name="home" />
+			<Stack.Screen name="(tabs)" />
 		</Stack>
 	);
 }

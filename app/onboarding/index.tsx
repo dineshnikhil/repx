@@ -11,26 +11,23 @@ import FitnessLevelStep from './steps/FitnessLevelStep';
 import GenderStep from './steps/GenderStep';
 import WeightStep from './steps/WeightStep';
 
-// Declare global property type
-declare global {
-	var currentOnboardingStep: number | undefined;
-	var userProfile: {
-		gender: string | null;
-		birthDate: { month: string; day: string; year: string };
-		weight: { value: string; unit: string };
-		hasFitnessExperience: boolean | null;
-		fitnessLevel: string;
-	};
-}
+// Global types are defined in app/_layout.tsx
 
 export default function OnboardingScreen() {
-	// User data state
-	const [userData, setUserData] = useState({
-		gender: null as string | null,
-		birthDate: { month: '', day: '', year: '' },
-		weight: { value: '', unit: 'kg' },
-		hasFitnessExperience: null as boolean | null,
-		fitnessLevel: '',
+	// User data state - initialize from global.userProfile or default
+	const [userData, setUserData] = useState(() => {
+		const defaultData = {
+			gender: null as string | null,
+			birthDate: { month: '', day: '', year: '' },
+			weight: { value: '', unit: 'kg' },
+			hasFitnessExperience: null as boolean | null,
+			fitnessLevel: '',
+		};
+		// Check if global.userProfile is defined and not an empty object
+		if (global.userProfile && Object.keys(global.userProfile).length > 0) {
+			return global.userProfile as typeof defaultData; // Use as to assert the type
+		}
+		return defaultData;
 	});
 
 	// Current step state - initialize from global if available
@@ -39,26 +36,32 @@ export default function OnboardingScreen() {
 	);
 	const totalSteps = 5;
 
-	// Initialize global user profile if it doesn't exist
 	useEffect(() => {
-		if (!global.userProfile) {
+		// Sync userData with global.userProfile, primarily for initialization
+		// and ensuring global.userProfile gets populated if it was initially empty.
+		if (!global.userProfile || Object.keys(global.userProfile).length === 0) {
 			global.userProfile = { ...userData };
 		} else {
-			// If we have saved data, load it
-			setUserData(global.userProfile);
+			// If global.userProfile exists and is different from component state, update component state
+			// This handles cases where global.userProfile might have been populated from elsewhere (e.g., async storage in future)
+			if (JSON.stringify(global.userProfile) !== JSON.stringify(userData)) {
+				setUserData(global.userProfile as any); // Keep as any or use the specific type
+			}
 		}
 
-		// Reset the global step after we've used it
-		global.currentOnboardingStep = undefined;
-	}, []);
+		// Reset the global step value after using it for initialization
+		if (global.currentOnboardingStep) {
+			global.currentOnboardingStep = undefined;
+		}
+	}, []); // Run once on mount
 
-	// Helper function to update user data
+	// Helper function to update user data and global profile
 	const updateUserData = (key: string, value: any) => {
-		const updatedData = { ...userData, [key]: value };
-		setUserData(updatedData);
-
-		// Update global user profile
-		global.userProfile = updatedData;
+		setUserData((prevData) => {
+			const updatedData = { ...prevData, [key]: value };
+			global.userProfile = updatedData; // Keep global.userProfile in sync
+			return updatedData;
+		});
 	};
 
 	// Helper function to navigate to next step
@@ -67,7 +70,8 @@ export default function OnboardingScreen() {
 			setCurrentStep((prev) => prev + 1);
 		} else {
 			// Complete onboarding and go to main app
-			router.replace('/');
+			console.log('Onboarding complete. Profile:', global.userProfile);
+			router.replace('/home');
 		}
 	};
 
@@ -82,7 +86,8 @@ export default function OnboardingScreen() {
 
 	// Helper function to skip onboarding
 	const skipOnboarding = () => {
-		router.replace('/');
+		console.log('Onboarding skipped. Navigating to /home');
+		router.replace('/home');
 	};
 
 	// Render the current step
@@ -167,7 +172,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#000',
-		paddingHorizontal: 15
+		paddingHorizontal: 15,
 	},
 	header: {
 		flexDirection: 'row',

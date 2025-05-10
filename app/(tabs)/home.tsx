@@ -15,8 +15,8 @@ import {
 } from 'react-native';
 // Remove Svg imports if no longer used elsewhere in this file
 // import Svg, { Circle, Line, Path } from 'react-native-svg';
-import BodyWeightModal from '../components/BodyWeightModal'; // <-- Add this import
-import InteractiveBodyWeightChart from '../components/InteractiveBodyWeightChart'; // Adjust path if necessary
+import BodyWeightModal from '../../components/BodyWeightModal'; // Adjusted path
+import InteractiveBodyWeightChart from '../../components/InteractiveBodyWeightChart'; // Adjusted path
 
 // Helper function to generate dynamic calendar days for the current week
 const generateCalendarDays = () => {
@@ -46,7 +46,7 @@ const generateCalendarDays = () => {
 };
 
 // Placeholder data - replace with actual data later
-const userName = 'Dinesh Nikhil';
+// const userName = 'Dinesh Nikhil'; // Commented out as it's a state now
 const currentWeight = '105';
 const padding = 20;
 
@@ -66,7 +66,7 @@ export default function HomeScreen() {
 	const [timeRangeButtonLayout, setTimeRangeButtonLayout] = useState(null);
 	const timeRangeButtonRef = React.useRef(null);
 	const [isBodyWeightModalVisible, setIsBodyWeightModalVisible] =
-		useState(false); // <-- Add this state
+		useState(false);
 
 	const currentRangeLabel = timeRangeOptions.find(
 		(opt) => opt.value === selectedRange
@@ -117,7 +117,7 @@ export default function HomeScreen() {
 					<View style={styles.profileInfo}>
 						<TouchableOpacity
 							style={styles.profilePicPlaceholder}
-							onPress={() => router.push('/profile')}
+							onPress={() => router.push('/profile')} // Should navigate to profile tab
 							activeOpacity={0.7}
 						/>
 						<View>
@@ -166,15 +166,13 @@ export default function HomeScreen() {
 						<TouchableOpacity
 							ref={timeRangeButtonRef}
 							style={styles.timeRangeButton}
-							onPress={handleTimeRangeButtonPress} // Updated onPress
+							onPress={handleTimeRangeButtonPress}
 						>
 							<Text style={styles.timeRangeText}>{currentRangeLabel}</Text>
 							<Feather name="chevron-down" size={16} color="#8E8E93" />
 						</TouchableOpacity>
 					</View>
-					{/* Replace BodyWeightGraph with InteractiveBodyWeightChart */}
 					<InteractiveBodyWeightChart selectedRange={selectedRange} />
-					{/* ... Current Weight and Track Today Button ... */}
 					<View style={styles.currentWeightContainer}>
 						<View>
 							<Text style={styles.currentWeightLabel}>Current Weight</Text>
@@ -185,7 +183,7 @@ export default function HomeScreen() {
 						</View>
 						<TouchableOpacity
 							style={styles.trackTodayButton}
-							onPress={() => setIsBodyWeightModalVisible(true)} // <-- Open modal
+							onPress={() => setIsBodyWeightModalVisible(true)}
 						>
 							<Text style={styles.trackTodayButtonText}>track today</Text>
 						</TouchableOpacity>
@@ -193,16 +191,16 @@ export default function HomeScreen() {
 				</View>
 			</ScrollView>
 
-			{/* Start Workout Button */}
+			{/* Start Workout Button
 			<TouchableOpacity
 				style={styles.startWorkoutButton}
 				onPress={() => {
-					/* Navigate to workout screen */
+					router.push('/workouts' as any); // Navigate to workouts tab, using 'as any' to bypass type error
 				}}
 			>
 				<Text style={styles.startWorkoutButtonText}>Start workout</Text>
 				<Feather name="plus" size={20} color="white" style={styles.plusIcon} />
-			</TouchableOpacity>
+			</TouchableOpacity> */}
 
 			{/* Dropdown Modal */}
 			<Modal
@@ -216,7 +214,6 @@ export default function HomeScreen() {
 					activeOpacity={1}
 					onPressOut={() => setIsDropdownVisible(false)}
 				>
-					{/* Ensure only one child here, conditional rendering wraps the View */}
 					{timeRangeButtonLayout && (
 						<View
 							style={[
@@ -227,7 +224,7 @@ export default function HomeScreen() {
 										(timeRangeButtonLayout as { y: number; height: number }).y +
 										(timeRangeButtonLayout as { y: number; height: number })
 											.height +
-										5, // 5px gap
+										5,
 									right:
 										screenWidth -
 										((timeRangeButtonLayout as { x: number; width: number }).x +
@@ -461,19 +458,15 @@ const styles = StyleSheet.create({
 	dropdownOverlay: {
 		flex: 1,
 		backgroundColor: 'rgba(0,0,0,0.5)',
-		// Remove justifyContent and alignItems to allow absolute positioning of child
 	},
 	dropdownContainer: {
 		backgroundColor: '#2C2C2E',
 		borderRadius: 8,
 		paddingVertical: 5,
-		width: 150, // Adjust width as needed
-		// Remove alignSelf, marginRight, marginTop as we are using absolute positioning
-		// alignSelf: 'flex-end',
-		// marginRight: 20,
-		// marginTop: 180,
-		elevation: 5, // Add elevation for Android shadow
-		shadowColor: '#000', // Shadow for iOS
+		width: 150,
+
+		elevation: 5,
+		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.25,
 		shadowRadius: 3.84,
