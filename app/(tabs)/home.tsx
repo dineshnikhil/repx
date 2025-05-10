@@ -110,11 +110,13 @@ export default function HomeScreen() {
 		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
 			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
 			<SafeAreaView style={styles.safeArea}>
-				<ScrollView
-					style={styles.container}
-					contentContainerStyle={styles.scrollContentContainer}
-				>
-					{/* ... Header and Calendar ... */}
+				<StatusBar
+					barStyle="light-content"
+					backgroundColor="#000000"
+					translucent={Platform.OS === 'android'}
+				/>
+
+				<View style={styles.container}>
 					<View style={styles.header}>
 						<View style={styles.profileInfo}>
 							<TouchableOpacity
@@ -132,69 +134,77 @@ export default function HomeScreen() {
 						</TouchableOpacity>
 					</View>
 
-					{/* Calendar */}
-					<View style={styles.calendarContainer}>
-						<ScrollView horizontal showsHorizontalScrollIndicator={false}>
-							{days.map((day, index) => (
-								<TouchableOpacity
-									key={index}
-									style={[
-										styles.dayItem,
-										day.isCurrent && styles.currentDayItem,
-									]}
-								>
-									<Text
+					<ScrollView
+						style={styles.scrollView}
+						contentContainerStyle={styles.scrollContentContainer}
+						showsVerticalScrollIndicator={false}
+					>
+						{/* Calendar */}
+						<View style={styles.calendarContainer}>
+							<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+								{days.map((day, index) => (
+									<TouchableOpacity
+										key={index}
 										style={[
-											styles.dayNameText,
-											day.isCurrent && styles.currentDayNameText,
+											styles.dayItem,
+											day.isCurrent && styles.currentDayItem,
 										]}
 									>
-										{day.dayName}
-									</Text>
-									<Text
-										style={[
-											styles.dateText,
-											day.isCurrent && styles.currentDateText,
-										]}
-									>
-										{day.date}
-									</Text>
-								</TouchableOpacity>
-							))}
-						</ScrollView>
-					</View>
+										<Text
+											style={[
+												styles.dayNameText,
+												day.isCurrent && styles.currentDayNameText,
+											]}
+										>
+											{day.dayName}
+										</Text>
+										<Text
+											style={[
+												styles.dateText,
+												day.isCurrent && styles.currentDateText,
+											]}
+										>
+											{day.date}
+										</Text>
+									</TouchableOpacity>
+								))}
+							</ScrollView>
+						</View>
 
-					{/* Body Weight Card */}
-					<View style={styles.card}>
-						<View style={styles.cardHeader}>
-							<Text style={styles.cardTitle}>Body Weight</Text>
-							<TouchableOpacity
-								ref={timeRangeButtonRef}
-								style={styles.timeRangeButton}
-								onPress={handleTimeRangeButtonPress}
-							>
-								<Text style={styles.timeRangeText}>{currentRangeLabel}</Text>
-								<Feather name="chevron-down" size={16} color="#8E8E93" />
-							</TouchableOpacity>
-						</View>
-						<InteractiveBodyWeightChart selectedRange={selectedRange} />
-						<View style={styles.currentWeightContainer}>
-							<View>
-								<Text style={styles.currentWeightLabel}>Current Weight</Text>
-								<View style={styles.weightValueContainer}>
-									<Text style={styles.currentWeightValue}>{currentWeight}</Text>
-									<Text style={styles.currentWeightUnit}>kg</Text>
-								</View>
+						{/* Body Weight Card */}
+						<View style={styles.card}>
+							<View style={styles.cardHeader}>
+								<Text style={styles.cardTitle}>Body Weight</Text>
+								<TouchableOpacity
+									ref={timeRangeButtonRef}
+									style={styles.timeRangeButton}
+									onPress={handleTimeRangeButtonPress}
+								>
+									<Text style={styles.timeRangeText}>{currentRangeLabel}</Text>
+									<Feather name="chevron-down" size={16} color="#8E8E93" />
+								</TouchableOpacity>
 							</View>
-							<TouchableOpacity
-								style={styles.trackTodayButton}
-								onPress={() => setIsBodyWeightModalVisible(true)}
-							>
-								<Text style={styles.trackTodayButtonText}>track today</Text>
-							</TouchableOpacity>
+							<InteractiveBodyWeightChart selectedRange={selectedRange} />
+							<View style={styles.currentWeightContainer}>
+								<View>
+									<Text style={styles.currentWeightLabel}>Current Weight</Text>
+									<View style={styles.weightValueContainer}>
+										<Text style={styles.currentWeightValue}>
+											{currentWeight}
+										</Text>
+										<Text style={styles.currentWeightUnit}>kg</Text>
+									</View>
+								</View>
+								<TouchableOpacity
+									style={styles.trackTodayButton}
+									onPress={() => setIsBodyWeightModalVisible(true)}
+								>
+									<Text style={styles.trackTodayButtonText}>track today</Text>
+								</TouchableOpacity>
+							</View>
 						</View>
-					</View>
-				</ScrollView>
+					</ScrollView>
+				</View>
 
 				{/* Dropdown Modal */}
 				<Modal
@@ -270,7 +280,11 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 	},
+	scrollView: {
+		flex: 1,
+	},
 	scrollContentContainer: {
+		paddingHorizontal: 20,
 		paddingBottom: 100,
 	},
 	header: {
@@ -308,7 +322,7 @@ const styles = StyleSheet.create({
 	},
 	calendarContainer: {
 		marginBottom: 20,
-		paddingLeft: 20,
+		paddingLeft: 0,
 	},
 	dayItem: {
 		backgroundColor: '#1C1C1E',

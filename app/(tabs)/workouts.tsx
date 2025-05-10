@@ -27,6 +27,10 @@ export default function WorkoutsScreen() {
 		{ id: '3', name: 'Workout Name', date: '09-may-2025', exerciseCount: 12 },
 	];
 
+	const startNewWorkout = () => {
+		router.push('/(tabs)/track-workout');
+	};
+
 	return (
 		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
 			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
@@ -42,7 +46,7 @@ export default function WorkoutsScreen() {
 						<View style={styles.profilePic} />
 						<Text style={styles.screenTitle}>Workouts</Text>
 						<TouchableOpacity style={styles.notificationButton}>
-							<Feather name="clock" size={24} color="white" />
+							<Feather name="bell" size={24} color="white" />
 						</TouchableOpacity>
 					</View>
 
@@ -54,6 +58,7 @@ export default function WorkoutsScreen() {
 						<TouchableOpacity
 							style={styles.startWorkoutButton}
 							activeOpacity={0.8}
+							onPress={startNewWorkout}
 						>
 							<Text style={styles.startWorkoutText}>Start New Workout +</Text>
 						</TouchableOpacity>
