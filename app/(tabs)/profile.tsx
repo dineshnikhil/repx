@@ -1,4 +1,6 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
@@ -20,175 +22,179 @@ const ProfileScreen = () => {
 	const router = useRouter();
 
 	return (
-		<SafeAreaView style={styles.safeArea}>
-			<StatusBar
-				barStyle="light-content"
-				backgroundColor="#1C1C1E"
-				translucent={Platform.OS === 'android'}
-			/>
+		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
+			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
+			<SafeAreaView style={styles.safeArea}>
+				<StatusBar
+					barStyle="light-content"
+					backgroundColor="#1C1C1E"
+					translucent={Platform.OS === 'android'}
+				/>
 
-			<View style={styles.container}>
-				<View style={styles.header}>
-					<TouchableOpacity
-						onPress={() => router.back()}
-						style={styles.backButton}
-					>
-						<Feather name="chevron-left" size={28} color="white" />
-					</TouchableOpacity>
-					<Text style={styles.headerTitle}>Profile</Text>
-					<TouchableOpacity style={styles.settingsButton}>
-						<Feather name="settings" size={24} color="white" />
-					</TouchableOpacity>
-				</View>
-
-				<ScrollView
-					style={styles.scrollView}
-					contentContainerStyle={styles.scrollViewContent}
-					showsVerticalScrollIndicator={false}
-				>
-					<View style={styles.profileSection}>
-						<View style={styles.profileImageContainer}>
-							<View style={styles.profileImage}>
-								{/* Profile image placeholder - replace with actual image */}
-							</View>
-							<View style={styles.verifiedBadge}>
-								<Feather
-									name="check"
-									size={12}
-									color="white"
-									style={{ marginRight: 4 }}
-								/>
-								<Text style={styles.badgeText}>Invivo</Text>
-							</View>
-						</View>
-
-						<Text style={styles.userName}>Olivia Wilson</Text>
-						<Text style={styles.userRole}>
-							Group Fitness Instructor / personal Trainer at Fitness Life
-						</Text>
-
-						<View style={styles.statsContainer}>
-							<View style={styles.statCard}>
-								<View style={styles.statIconContainer}>
-									<Feather name="clock" size={24} color="white" />
-								</View>
-								<Text style={styles.statValue}>3h 30m</Text>
-								<Text style={styles.statLabel}>Total time</Text>
-							</View>
-
-							<View style={styles.statCard}>
-								<View
-									style={[
-										styles.statIconContainer,
-										{ backgroundColor: '#FF6B00' },
-									]}
-								>
-									<Ionicons name="flame" size={24} color="white" />
-								</View>
-								<Text style={styles.statValue}>7200 cal</Text>
-								<Text style={styles.statLabel}>Burned</Text>
-							</View>
-
-							<View style={styles.statCard}>
-								<View
-									style={[
-										styles.statIconContainer,
-										{ backgroundColor: '#FFD700' },
-									]}
-								>
-									<Feather name="check-circle" size={24} color="white" />
-								</View>
-								<Text style={styles.statValue}>05</Text>
-								<Text style={styles.statLabel}>Done</Text>
-							</View>
-						</View>
-
-						<View style={styles.menuContainer}>
-							<TouchableOpacity style={styles.menuItem}>
-								<View style={styles.menuIconContainer}>
-									<Feather name="user" size={20} color="white" />
-								</View>
-								<Text style={styles.menuText}>Personal</Text>
-								<Feather
-									name="chevron-right"
-									size={20}
-									color="#8E8E93"
-									style={styles.menuArrow}
-								/>
-							</TouchableOpacity>
-
-							<TouchableOpacity style={styles.menuItem}>
-								<View style={styles.menuIconContainer}>
-									<Feather name="settings" size={20} color="white" />
-								</View>
-								<Text style={styles.menuText}>General</Text>
-								<Feather
-									name="chevron-right"
-									size={20}
-									color="#8E8E93"
-									style={styles.menuArrow}
-								/>
-							</TouchableOpacity>
-
-							<TouchableOpacity style={styles.menuItem}>
-								<View style={styles.menuIconContainer}>
-									<Feather name="bell" size={20} color="white" />
-								</View>
-								<Text style={styles.menuText}>Notification</Text>
-								<Feather
-									name="chevron-right"
-									size={20}
-									color="#8E8E93"
-									style={styles.menuArrow}
-								/>
-							</TouchableOpacity>
-
-							<TouchableOpacity style={styles.menuItem}>
-								<View style={styles.menuIconContainer}>
-									<Feather name="help-circle" size={20} color="white" />
-								</View>
-								<Text style={styles.menuText}>Help</Text>
-								<Feather
-									name="chevron-right"
-									size={20}
-									color="#8E8E93"
-									style={styles.menuArrow}
-								/>
-							</TouchableOpacity>
-
-							<TouchableOpacity style={styles.menuItem}>
-								<View style={styles.menuIconContainer}>
-									<Feather name="info" size={20} color="white" />
-								</View>
-								<Text style={styles.menuText}>About</Text>
-								<Feather
-									name="chevron-right"
-									size={20}
-									color="#8E8E93"
-									style={styles.menuArrow}
-								/>
-							</TouchableOpacity>
-
-							{/* Extra space to ensure content isn't cut off by tab bar */}
-							<View style={{ height: 100 }} />
-						</View>
+				<View style={styles.container}>
+					<View style={styles.header}>
+						<TouchableOpacity
+							onPress={() => router.back()}
+							style={styles.backButton}
+						>
+							<Feather name="chevron-left" size={28} color="white" />
+						</TouchableOpacity>
+						<Text style={styles.headerTitle}>Profile</Text>
+						<TouchableOpacity style={styles.settingsButton}>
+							<Feather name="settings" size={24} color="white" />
+						</TouchableOpacity>
 					</View>
-				</ScrollView>
-			</View>
-		</SafeAreaView>
+
+					<ScrollView
+						style={styles.scrollView}
+						contentContainerStyle={styles.scrollViewContent}
+						showsVerticalScrollIndicator={false}
+					>
+						<View style={styles.profileSection}>
+							<View style={styles.profileImageContainer}>
+								<View style={styles.profileImage}>
+									{/* Profile image placeholder - replace with actual image */}
+								</View>
+								<View style={styles.verifiedBadge}>
+									<Feather
+										name="check"
+										size={12}
+										color="white"
+										style={{ marginRight: 4 }}
+									/>
+									<Text style={styles.badgeText}>Invivo</Text>
+								</View>
+							</View>
+
+							<Text style={styles.userName}>Olivia Wilson</Text>
+							<Text style={styles.userRole}>
+								Group Fitness Instructor / personal Trainer at Fitness Life
+							</Text>
+
+							<View style={styles.statsContainer}>
+								<View style={styles.statCard}>
+									<View style={styles.statIconContainer}>
+										<Feather name="clock" size={24} color="white" />
+									</View>
+									<Text style={styles.statValue}>3h 30m</Text>
+									<Text style={styles.statLabel}>Total time</Text>
+								</View>
+
+								<View style={styles.statCard}>
+									<View
+										style={[
+											styles.statIconContainer,
+											{ backgroundColor: '#FF6B00' },
+										]}
+									>
+										<Ionicons name="flame" size={24} color="white" />
+									</View>
+									<Text style={styles.statValue}>7200 cal</Text>
+									<Text style={styles.statLabel}>Burned</Text>
+								</View>
+
+								<View style={styles.statCard}>
+									<View
+										style={[
+											styles.statIconContainer,
+											{ backgroundColor: '#FFD700' },
+										]}
+									>
+										<Feather name="check-circle" size={24} color="white" />
+									</View>
+									<Text style={styles.statValue}>05</Text>
+									<Text style={styles.statLabel}>Done</Text>
+								</View>
+							</View>
+
+							<View style={styles.menuContainer}>
+								<TouchableOpacity style={styles.menuItem}>
+									<View style={styles.menuIconContainer}>
+										<Feather name="user" size={20} color="white" />
+									</View>
+									<Text style={styles.menuText}>Personal</Text>
+									<Feather
+										name="chevron-right"
+										size={20}
+										color="#8E8E93"
+										style={styles.menuArrow}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity style={styles.menuItem}>
+									<View style={styles.menuIconContainer}>
+										<Feather name="settings" size={20} color="white" />
+									</View>
+									<Text style={styles.menuText}>General</Text>
+									<Feather
+										name="chevron-right"
+										size={20}
+										color="#8E8E93"
+										style={styles.menuArrow}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity style={styles.menuItem}>
+									<View style={styles.menuIconContainer}>
+										<Feather name="bell" size={20} color="white" />
+									</View>
+									<Text style={styles.menuText}>Notification</Text>
+									<Feather
+										name="chevron-right"
+										size={20}
+										color="#8E8E93"
+										style={styles.menuArrow}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity style={styles.menuItem}>
+									<View style={styles.menuIconContainer}>
+										<Feather name="help-circle" size={20} color="white" />
+									</View>
+									<Text style={styles.menuText}>Help</Text>
+									<Feather
+										name="chevron-right"
+										size={20}
+										color="#8E8E93"
+										style={styles.menuArrow}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity style={styles.menuItem}>
+									<View style={styles.menuIconContainer}>
+										<Feather name="info" size={20} color="white" />
+									</View>
+									<Text style={styles.menuText}>About</Text>
+									<Feather
+										name="chevron-right"
+										size={20}
+										color="#8E8E93"
+										style={styles.menuArrow}
+									/>
+								</TouchableOpacity>
+
+								{/* Extra space to ensure content isn't cut off by tab bar */}
+								<View style={{ height: 100 }} />
+							</View>
+						</View>
+					</ScrollView>
+				</View>
+			</SafeAreaView>
+		</LinearGradient>
 	);
 };
 
 const styles = StyleSheet.create({
+	gradient: {
+		flex: 1,
+	},
 	safeArea: {
 		flex: 1,
-		backgroundColor: '#1C1C1E',
-		// Add padding top for Android to prevent status bar overlap
+		// Remove the background color since we're using a gradient
 		paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
 	},
 	container: {
 		flex: 1,
-		// Add bottom padding to account for the floating tab bar
 		paddingBottom: 0, // We'll handle bottom space in the scrollView
 	},
 	header: {

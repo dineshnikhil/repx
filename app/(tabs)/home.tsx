@@ -1,4 +1,6 @@
 import { Feather } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -13,10 +15,8 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
-// Remove Svg imports if no longer used elsewhere in this file
-// import Svg, { Circle, Line, Path } from 'react-native-svg';
-import BodyWeightModal from '../../components/BodyWeightModal'; // Adjusted path
-import InteractiveBodyWeightChart from '../../components/InteractiveBodyWeightChart'; // Adjusted path
+import BodyWeightModal from '../../components/BodyWeightModal';
+import InteractiveBodyWeightChart from '../../components/InteractiveBodyWeightChart';
 
 // Helper function to generate dynamic calendar days for the current week
 const generateCalendarDays = () => {
@@ -107,165 +107,164 @@ export default function HomeScreen() {
 	};
 
 	return (
-		<SafeAreaView style={styles.safeArea}>
-			<ScrollView
-				style={styles.container}
-				contentContainerStyle={styles.scrollContentContainer}
-			>
-				{/* ... Header and Calendar ... */}
-				<View style={styles.header}>
-					<View style={styles.profileInfo}>
-						<TouchableOpacity
-							style={styles.profilePicPlaceholder}
-							onPress={() => router.push('/profile')} // Should navigate to profile tab
-							activeOpacity={0.7}
-						/>
-						<View>
-							<Text style={styles.greetingText}>Good Morning,</Text>
-							<Text style={styles.userNameText}>{userName}</Text>
-						</View>
-					</View>
-					<TouchableOpacity style={styles.notificationButton}>
-						<Feather name="bell" size={24} color="white" />
-					</TouchableOpacity>
-				</View>
-
-				{/* Calendar */}
-				<View style={styles.calendarContainer}>
-					<ScrollView horizontal showsHorizontalScrollIndicator={false}>
-						{days.map((day, index) => (
+		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
+			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
+			<SafeAreaView style={styles.safeArea}>
+				<ScrollView
+					style={styles.container}
+					contentContainerStyle={styles.scrollContentContainer}
+				>
+					{/* ... Header and Calendar ... */}
+					<View style={styles.header}>
+						<View style={styles.profileInfo}>
 							<TouchableOpacity
-								key={index}
-								style={[styles.dayItem, day.isCurrent && styles.currentDayItem]}
-							>
-								<Text
-									style={[
-										styles.dayNameText,
-										day.isCurrent && styles.currentDayNameText,
-									]}
-								>
-									{day.dayName}
-								</Text>
-								<Text
-									style={[
-										styles.dateText,
-										day.isCurrent && styles.currentDateText,
-									]}
-								>
-									{day.date}
-								</Text>
-							</TouchableOpacity>
-						))}
-					</ScrollView>
-				</View>
-
-				{/* Body Weight Card */}
-				<View style={styles.card}>
-					<View style={styles.cardHeader}>
-						<Text style={styles.cardTitle}>Body Weight</Text>
-						<TouchableOpacity
-							ref={timeRangeButtonRef}
-							style={styles.timeRangeButton}
-							onPress={handleTimeRangeButtonPress}
-						>
-							<Text style={styles.timeRangeText}>{currentRangeLabel}</Text>
-							<Feather name="chevron-down" size={16} color="#8E8E93" />
-						</TouchableOpacity>
-					</View>
-					<InteractiveBodyWeightChart selectedRange={selectedRange} />
-					<View style={styles.currentWeightContainer}>
-						<View>
-							<Text style={styles.currentWeightLabel}>Current Weight</Text>
-							<View style={styles.weightValueContainer}>
-								<Text style={styles.currentWeightValue}>{currentWeight}</Text>
-								<Text style={styles.currentWeightUnit}>kg</Text>
+								style={styles.profilePicPlaceholder}
+								onPress={() => router.push('/profile')} // Should navigate to profile tab
+								activeOpacity={0.7}
+							/>
+							<View>
+								<Text style={styles.greetingText}>Good Morning,</Text>
+								<Text style={styles.userNameText}>{userName}</Text>
 							</View>
 						</View>
-						<TouchableOpacity
-							style={styles.trackTodayButton}
-							onPress={() => setIsBodyWeightModalVisible(true)}
-						>
-							<Text style={styles.trackTodayButtonText}>track today</Text>
+						<TouchableOpacity style={styles.notificationButton}>
+							<Feather name="bell" size={24} color="white" />
 						</TouchableOpacity>
 					</View>
-				</View>
-			</ScrollView>
 
-			{/* Start Workout Button
-			<TouchableOpacity
-				style={styles.startWorkoutButton}
-				onPress={() => {
-					router.push('/workouts' as any); // Navigate to workouts tab, using 'as any' to bypass type error
-				}}
-			>
-				<Text style={styles.startWorkoutButtonText}>Start workout</Text>
-				<Feather name="plus" size={20} color="white" style={styles.plusIcon} />
-			</TouchableOpacity> */}
-
-			{/* Dropdown Modal */}
-			<Modal
-				transparent={true}
-				visible={isDropdownVisible}
-				onRequestClose={() => setIsDropdownVisible(false)}
-				animationType="fade"
-			>
-				<TouchableOpacity
-					style={styles.dropdownOverlay}
-					activeOpacity={1}
-					onPressOut={() => setIsDropdownVisible(false)}
-				>
-					{timeRangeButtonLayout && (
-						<View
-							style={[
-								styles.dropdownContainer,
-								{
-									position: 'absolute',
-									top:
-										(timeRangeButtonLayout as { y: number; height: number }).y +
-										(timeRangeButtonLayout as { y: number; height: number })
-											.height +
-										5,
-									right:
-										screenWidth -
-										((timeRangeButtonLayout as { x: number; width: number }).x +
-											(timeRangeButtonLayout as { x: number; width: number })
-												.width),
-								},
-							]}
-						>
-							{timeRangeOptions.map((option) => (
+					{/* Calendar */}
+					<View style={styles.calendarContainer}>
+						<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+							{days.map((day, index) => (
 								<TouchableOpacity
-									key={option.value}
-									style={styles.dropdownItem}
-									onPress={() => {
-										setSelectedRange(option.value);
-										setIsDropdownVisible(false);
-									}}
+									key={index}
+									style={[
+										styles.dayItem,
+										day.isCurrent && styles.currentDayItem,
+									]}
 								>
-									<Text style={styles.dropdownItemText}>{option.label}</Text>
+									<Text
+										style={[
+											styles.dayNameText,
+											day.isCurrent && styles.currentDayNameText,
+										]}
+									>
+										{day.dayName}
+									</Text>
+									<Text
+										style={[
+											styles.dateText,
+											day.isCurrent && styles.currentDateText,
+										]}
+									>
+										{day.date}
+									</Text>
 								</TouchableOpacity>
 							))}
-						</View>
-					)}
-				</TouchableOpacity>
-			</Modal>
+						</ScrollView>
+					</View>
 
-			{/* Body Weight Tracking Modal */}
-			<BodyWeightModal
-				visible={isBodyWeightModalVisible}
-				onClose={() => setIsBodyWeightModalVisible(false)}
-				onTrack={handleTrackWeight}
-			/>
-		</SafeAreaView>
+					{/* Body Weight Card */}
+					<View style={styles.card}>
+						<View style={styles.cardHeader}>
+							<Text style={styles.cardTitle}>Body Weight</Text>
+							<TouchableOpacity
+								ref={timeRangeButtonRef}
+								style={styles.timeRangeButton}
+								onPress={handleTimeRangeButtonPress}
+							>
+								<Text style={styles.timeRangeText}>{currentRangeLabel}</Text>
+								<Feather name="chevron-down" size={16} color="#8E8E93" />
+							</TouchableOpacity>
+						</View>
+						<InteractiveBodyWeightChart selectedRange={selectedRange} />
+						<View style={styles.currentWeightContainer}>
+							<View>
+								<Text style={styles.currentWeightLabel}>Current Weight</Text>
+								<View style={styles.weightValueContainer}>
+									<Text style={styles.currentWeightValue}>{currentWeight}</Text>
+									<Text style={styles.currentWeightUnit}>kg</Text>
+								</View>
+							</View>
+							<TouchableOpacity
+								style={styles.trackTodayButton}
+								onPress={() => setIsBodyWeightModalVisible(true)}
+							>
+								<Text style={styles.trackTodayButtonText}>track today</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				</ScrollView>
+
+				{/* Dropdown Modal */}
+				<Modal
+					transparent={true}
+					visible={isDropdownVisible}
+					onRequestClose={() => setIsDropdownVisible(false)}
+					animationType="fade"
+				>
+					<TouchableOpacity
+						style={styles.dropdownOverlay}
+						activeOpacity={1}
+						onPressOut={() => setIsDropdownVisible(false)}
+					>
+						{timeRangeButtonLayout && (
+							<View
+								style={[
+									styles.dropdownContainer,
+									{
+										position: 'absolute',
+										top:
+											(timeRangeButtonLayout as { y: number; height: number })
+												.y +
+											(timeRangeButtonLayout as { y: number; height: number })
+												.height +
+											5,
+										right:
+											screenWidth -
+											((timeRangeButtonLayout as { x: number; width: number })
+												.x +
+												(timeRangeButtonLayout as { x: number; width: number })
+													.width),
+									},
+								]}
+							>
+								{timeRangeOptions.map((option) => (
+									<TouchableOpacity
+										key={option.value}
+										style={styles.dropdownItem}
+										onPress={() => {
+											setSelectedRange(option.value);
+											setIsDropdownVisible(false);
+										}}
+									>
+										<Text style={styles.dropdownItemText}>{option.label}</Text>
+									</TouchableOpacity>
+								))}
+							</View>
+						)}
+					</TouchableOpacity>
+				</Modal>
+
+				{/* Body Weight Tracking Modal */}
+				<BodyWeightModal
+					visible={isBodyWeightModalVisible}
+					onClose={() => setIsBodyWeightModalVisible(false)}
+					onTrack={handleTrackWeight}
+				/>
+			</SafeAreaView>
+		</LinearGradient>
 	);
 }
 
 const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+	gradient: {
+		flex: 1,
+	},
 	safeArea: {
 		flex: 1,
-		backgroundColor: '#000000',
 		paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
 	},
 	container: {

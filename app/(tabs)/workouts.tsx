@@ -1,4 +1,6 @@
 import { Feather } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
@@ -26,79 +28,83 @@ export default function WorkoutsScreen() {
 	];
 
 	return (
-		<SafeAreaView style={styles.safeArea}>
-			<StatusBar
-				barStyle="light-content"
-				backgroundColor="#000000"
-				translucent={Platform.OS === 'android'}
-			/>
+		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
+			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
+			<SafeAreaView style={styles.safeArea}>
+				<StatusBar
+					barStyle="light-content"
+					backgroundColor="#000000"
+					translucent={Platform.OS === 'android'}
+				/>
 
-			<View style={styles.container}>
-				<View style={styles.header}>
-					<View style={styles.profilePic} />
-					<Text style={styles.screenTitle}>Workouts</Text>
-					<TouchableOpacity style={styles.notificationButton}>
-						<Feather name="clock" size={24} color="white" />
-					</TouchableOpacity>
-				</View>
-
-				<ScrollView
-					style={styles.scrollView}
-					contentContainerStyle={styles.scrollContentContainer}
-					showsVerticalScrollIndicator={false}
-				>
-					<TouchableOpacity
-						style={styles.startWorkoutButton}
-						activeOpacity={0.8}
-					>
-						<Text style={styles.startWorkoutText}>Start New Workout +</Text>
-					</TouchableOpacity>
-
-					<View style={styles.actionButtonsContainer}>
-						<ActionButton
-							title="New Routine"
-							onPress={() => {}}
-							icon={<DocumentIcon />}
-							style={styles.actionButton}
-						/>
-						<ActionButton
-							title="Explore Routine"
-							onPress={() => {}}
-							icon={<SearchIcon />}
-							style={styles.actionButton}
-						/>
+				<View style={styles.container}>
+					<View style={styles.header}>
+						<View style={styles.profilePic} />
+						<Text style={styles.screenTitle}>Workouts</Text>
+						<TouchableOpacity style={styles.notificationButton}>
+							<Feather name="clock" size={24} color="white" />
+						</TouchableOpacity>
 					</View>
 
-					<Text style={styles.sectionTitle}>past workouts performed</Text>
+					<ScrollView
+						style={styles.scrollView}
+						contentContainerStyle={styles.scrollContentContainer}
+						showsVerticalScrollIndicator={false}
+					>
+						<TouchableOpacity
+							style={styles.startWorkoutButton}
+							activeOpacity={0.8}
+						>
+							<Text style={styles.startWorkoutText}>Start New Workout +</Text>
+						</TouchableOpacity>
 
-					{pastWorkouts.map((workout) => (
-						<WorkoutCard
-							key={workout.id}
-							name={workout.name}
-							date={workout.date}
-							exerciseCount={workout.exerciseCount}
-						/>
-					))}
+						<View style={styles.actionButtonsContainer}>
+							<ActionButton
+								title="New Routine"
+								onPress={() => {}}
+								icon={<DocumentIcon />}
+								style={styles.actionButton}
+							/>
+							<ActionButton
+								title="Explore Routine"
+								onPress={() => {}}
+								icon={<SearchIcon />}
+								style={styles.actionButton}
+							/>
+						</View>
 
-					{/* Extra space to ensure content isn't cut off by tab bar */}
-					<View style={{ height: 100 }} />
-				</ScrollView>
-			</View>
-		</SafeAreaView>
+						<Text style={styles.sectionTitle}>past workouts performed</Text>
+
+						{pastWorkouts.map((workout) => (
+							<WorkoutCard
+								key={workout.id}
+								name={workout.name}
+								date={workout.date}
+								exerciseCount={workout.exerciseCount}
+							/>
+						))}
+
+						{/* Extra space to ensure content isn't cut off by tab bar */}
+						<View style={{ height: 100 }} />
+					</ScrollView>
+				</View>
+			</SafeAreaView>
+		</LinearGradient>
 	);
 }
 
 const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+	gradient: {
+		flex: 1,
+	},
 	safeArea: {
 		flex: 1,
-		backgroundColor: '#000000',
 		paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
 	},
 	container: {
 		flex: 1,
-		paddingBottom: 0, // We'll handle bottom space in the scrollView
 	},
 	header: {
 		flexDirection: 'row',
