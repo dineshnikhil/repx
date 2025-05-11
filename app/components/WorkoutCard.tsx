@@ -28,7 +28,7 @@ const WorkoutCard = ({ name, date, exerciseCount }: WorkoutCardProps) => {
 
 const styles = StyleSheet.create({
 	card: {
-		backgroundColor: '#1C1C1E',
+		backgroundColor: '#E8F0FF',
 		borderRadius: 16,
 		padding: 20,
 		marginVertical: 10,
@@ -41,18 +41,18 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	workoutName: {
-		color: 'white',
+		color: '#272C36',
 		fontSize: 24,
 		fontWeight: 'bold',
 	},
 	subtitle: {
-		color: 'white',
+		color: '#272C36',
 		fontSize: 18,
 		opacity: 0.8,
 		marginTop: 5,
 	},
 	date: {
-		color: '#999',
+		color: '#A1A8B4',
 		fontSize: 16,
 	},
 	exerciseContainer: {
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	exerciseCount: {
-		color: '#999',
+		color: '#A1A8B4',
 		fontSize: 16,
 		marginLeft: 8,
 	},

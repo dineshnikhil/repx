@@ -9,10 +9,10 @@ export default function TabLayout() {
 			screenOptions={{
 				headerShown: false,
 				tabBarShowLabel: false, // Hide labels
-				tabBarActiveTintColor: '#FFFFFF', // Active tab white
+				tabBarActiveTintColor: '#0057ff', // Active tab white
 				tabBarInactiveTintColor: '#8E8E93', // Inactive tab gray
 				tabBarStyle: {
-					backgroundColor: '#111010', // Black background for tab bar
+					backgroundColor: '#ffffff', // Black background for tab bar
 					borderTopWidth: 0, // Remove top border line
 					height: 60, // Adjust height as needed
 					paddingBottom: 5,
@@ -47,7 +47,7 @@ export default function TabLayout() {
 						>
 							<Feather
 								name="home"
-								color={focused ? '#FFFFFF' : '#8E8E93'}
+								color={focused ? '#0057ff' : '#8E8E93'}
 								size={24}
 							/>
 						</View>
@@ -66,7 +66,7 @@ export default function TabLayout() {
 						>
 							<MaterialCommunityIcons
 								name="dumbbell"
-								color={focused ? '#FFFFFF' : '#8E8E93'}
+								color={focused ? '#0057ff' : '#8E8E93'}
 								size={24}
 							/>
 						</View>
@@ -85,7 +85,7 @@ export default function TabLayout() {
 						>
 							<MaterialCommunityIcons
 								name="clipboard-text-outline"
-								color={focused ? '#FFFFFF' : '#8E8E93'}
+								color={focused ? '#0057ff' : '#8E8E93'}
 								size={24}
 							/>
 						</View>
@@ -104,7 +104,7 @@ export default function TabLayout() {
 						>
 							<Feather
 								name="user"
-								color={focused ? '#FFFFFF' : '#8E8E93'}
+								color={focused ? '#0057ff' : '#8E8E93'}
 								size={24}
 							/>
 						</View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
 	activeIconContainer: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#FF6B00', // Orange background for active tab
+		backgroundColor: '#E3FFA8', // Orange background for active tab
 		width: 40,
 		height: 40,
 		borderRadius: 8,

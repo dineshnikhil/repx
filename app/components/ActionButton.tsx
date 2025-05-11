@@ -37,7 +37,7 @@ const ActionButton = ({
 
 const styles = StyleSheet.create({
 	button: {
-		backgroundColor: '#1C1C1E',
+		backgroundColor: '#E3FFA8',
 		borderRadius: 16,
 		padding: 20,
 		justifyContent: 'center',
@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
 	},
 	fullWidth: {
 		width: '100%',
-		backgroundColor: '#FF5722',
+		backgroundColor: '#0073E6',
 	},
 	buttonText: {
-		color: 'white',
+		color: '#272C36',
 		fontSize: 18,
 		fontWeight: 'bold',
 		marginTop: 16,

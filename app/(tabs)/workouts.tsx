@@ -46,7 +46,7 @@ export default function WorkoutsScreen() {
 						<View style={styles.profilePic} />
 						<Text style={styles.screenTitle}>Workouts</Text>
 						<TouchableOpacity style={styles.notificationButton}>
-							<Feather name="bell" size={24} color="white" />
+							<Feather name="bell" size={24} color="#272C36" />
 						</TouchableOpacity>
 					</View>
 
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
 	},
 	notificationButton: {
 		padding: 8,
-		backgroundColor: '#1C1C1E',
+		backgroundColor: '#E8F0FF',
 		borderRadius: 20,
 	},
 	screenTitle: {
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
 		paddingTop: 10,
 	},
 	startWorkoutButton: {
-		backgroundColor: '#FF5722',
+		backgroundColor: '#ffffff',
 		borderRadius: 16,
 		padding: 16,
 		marginBottom: 24,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	startWorkoutText: {
-		color: 'white',
+		color: '#0057ff',
 		fontSize: 18,
 		fontWeight: 'bold',
 		textAlign: 'center',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
 		width: '48%',
 	},
 	sectionTitle: {
-		color: '#999',
+		color: '#ffffff',
 		fontSize: 16,
 		marginBottom: 16,
 	},

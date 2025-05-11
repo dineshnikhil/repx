@@ -130,7 +130,7 @@ export default function HomeScreen() {
 							</View>
 						</View>
 						<TouchableOpacity style={styles.notificationButton}>
-							<Feather name="bell" size={24} color="white" />
+							<Feather name="bell" size={24} color="#272C36" />
 						</TouchableOpacity>
 					</View>
 
@@ -181,7 +181,7 @@ export default function HomeScreen() {
 									onPress={handleTimeRangeButtonPress}
 								>
 									<Text style={styles.timeRangeText}>{currentRangeLabel}</Text>
-									<Feather name="chevron-down" size={16} color="#8E8E93" />
+									<Feather name="chevron-down" size={16} color="#a1a8b4" />
 								</TouchableOpacity>
 							</View>
 							<InteractiveBodyWeightChart selectedRange={selectedRange} />
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
 	},
 	notificationButton: {
 		padding: 8,
-		backgroundColor: '#1C1C1E',
+		backgroundColor: '#e8f0ff',
 		borderRadius: 20,
 	},
 	calendarContainer: {
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
 		paddingLeft: 0,
 	},
 	dayItem: {
-		backgroundColor: '#1C1C1E',
+		backgroundColor: '#0073E6',
 		borderRadius: 12,
 		paddingVertical: 10,
 		paddingHorizontal: 15,
@@ -334,15 +334,15 @@ const styles = StyleSheet.create({
 		minWidth: 50,
 	},
 	currentDayItem: {
-		backgroundColor: '#FF6B00',
+		backgroundColor: '#e3ffa8',
 	},
 	dayNameText: {
-		color: '#8E8E93',
+		color: 'white',
 		fontSize: 12,
 		marginBottom: 4,
 	},
 	currentDayNameText: {
-		color: 'white',
+		color: '#272c36',
 	},
 	dateText: {
 		color: 'white',
@@ -350,10 +350,10 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 	},
 	currentDateText: {
-		color: 'white',
+		color: '#272c36',
 	},
 	card: {
-		backgroundColor: '#1C1C1E',
+		backgroundColor: '#e8f0ff',
 		borderRadius: 16,
 		marginHorizontal: 20,
 		padding: 20,
@@ -366,20 +366,20 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 	},
 	cardTitle: {
-		color: 'white',
+		color: '#272c36',
 		fontSize: 18,
 		fontWeight: 'bold',
 	},
 	timeRangeButton: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: '#2C2C2E',
+		backgroundColor: '#e8f0ff',
 		paddingVertical: 6,
 		paddingHorizontal: 10,
 		borderRadius: 8,
 	},
 	timeRangeText: {
-		color: 'white',
+		color: '#272c36',
 		fontSize: 12,
 		marginRight: 4,
 	},
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 	currentWeightLabel: {
-		color: '#8E8E93',
+		color: '#a1a8b4',
 		fontSize: 12,
 		marginBottom: 4,
 	},
@@ -414,24 +414,24 @@ const styles = StyleSheet.create({
 		alignItems: 'baseline',
 	},
 	currentWeightValue: {
-		color: 'white',
+		color: '#0057FF',
 		fontSize: 36,
 		fontWeight: 'bold',
 	},
 	currentWeightUnit: {
-		color: '#8E8E93',
+		color: '#a1a8b4',
 		fontSize: 16,
 		marginLeft: 4,
 		marginBottom: 5,
 	},
 	trackTodayButton: {
-		backgroundColor: '#FF6B00',
+		backgroundColor: '#0057FF',
 		borderRadius: 10,
 		paddingVertical: 12,
 		paddingHorizontal: 20,
 	},
 	trackTodayButtonText: {
-		color: 'white',
+		color: '#ffffff',
 		fontSize: 14,
 		fontWeight: 'bold',
 	},
