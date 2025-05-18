@@ -132,7 +132,10 @@ export default function TrackWorkoutScreen() {
 					</View>
 
 					{/* Add Exercise Button */}
-					<TouchableOpacity style={styles.addButton}>
+					<TouchableOpacity
+						style={styles.addButton}
+						onPress={() => router.push('/track-workout/search')}
+					>
 						<Text style={styles.addButtonText}>+ Add Exercise</Text>
 					</TouchableOpacity>
 

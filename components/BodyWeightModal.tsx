@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
 	},
 	modalContent: {
 		width: '90%',
-		backgroundColor: '#1C1C1E', // Dark background like the image
+		backgroundColor: '#e8f0ff', // Dark background like the image
 		borderRadius: 20,
 		padding: 25,
 		alignItems: 'center',
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
 		top: 15,
 		left: 15,
 		padding: 8, // Added padding for touch area and for centering icon
-		backgroundColor: '#2C2C2E', // Dark grey background
+		backgroundColor: '#a1a8b4', // Dark grey background
 		borderRadius: 15, // Make it circular (half of width/height if they were fixed)
 		zIndex: 1, // Ensure it's above other modal content if necessary
 	},
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
 		fontWeight: '500',
 	},
 	title: {
-		color: 'white',
+		color: '#272C36',
 		fontSize: 22,
 		fontWeight: 'bold',
 		textAlign: 'center',
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
 	weightInput: {
 		width: '100%',
 		height: 55, // Increased height
-		backgroundColor: '#2C2C2E', // Darker input background
+		backgroundColor: '#ffffff', // Darker input background
 		borderRadius: 10,
 		color: 'white',
 		fontSize: 16,

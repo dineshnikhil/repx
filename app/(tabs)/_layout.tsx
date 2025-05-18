@@ -55,25 +55,6 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="workouts"
-				options={{
-					title: 'Workouts',
-					tabBarIcon: ({ focused }) => (
-						<View
-							style={
-								focused ? styles.activeIconContainer : styles.iconContainer
-							}
-						>
-							<MaterialCommunityIcons
-								name="dumbbell"
-								color={focused ? '#0057ff' : '#8E8E93'}
-								size={24}
-							/>
-						</View>
-					),
-				}}
-			/>
-			<Tabs.Screen
 				name="progress"
 				options={{
 					title: 'Progress',
@@ -111,6 +92,26 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+			<Tabs.Screen
+				name="workouts"
+				options={{
+					title: 'Workouts',
+					tabBarIcon: ({ focused }) => (
+						<View
+							style={
+								focused ? styles.activeIconContainer : styles.iconContainer
+							}
+						>
+							<MaterialCommunityIcons
+								name="dumbbell"
+								color={focused ? '#0057ff' : '#8E8E93'}
+								size={24}
+							/>
+						</View>
+					),
+				}}
+			/>
+			<Tabs.Screen name="track-workout" options={{ href: null }} />
 		</Tabs>
 	);
 }
