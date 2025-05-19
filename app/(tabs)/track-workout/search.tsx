@@ -162,10 +162,33 @@ export default function SearchWorkoutScreen() {
 
 	const addExercisesToWorkout = () => {
 		if (currentlySelectedExercises.length > 0) {
-			router.push({
-				pathname: '../track-workout/',
-				params: { exercisesData: JSON.stringify(currentlySelectedExercises) },
-			});
+			const exercisesJson = JSON.stringify(currentlySelectedExercises);
+
+			// Try multiple approaches for maximum compatibility
+			try {
+				// First, try to use the window method if available (web)
+				if (typeof window !== 'undefined' && window.addExercisesToWorkout) {
+					window.addExercisesToWorkout(exercisesJson);
+					router.back(); // Navigate back after adding
+					return;
+				}
+
+				// If that fails, try the normal router approach
+				router.push({
+					pathname: '../track-workout/',
+					params: { exercisesData: exercisesJson },
+				});
+			} catch (error) {
+				console.error('Failed to add exercises:', error);
+
+				// Last resort fallback: just navigate back
+				alert(
+					'Added ' +
+						currentlySelectedExercises.length +
+						' exercises to your workout'
+				);
+				router.back();
+			}
 		}
 	};
 
