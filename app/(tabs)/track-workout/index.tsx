@@ -1,23 +1,114 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
+	FlatList,
 	Platform,
 	SafeAreaView,
 	StatusBar,
 	StyleSheet,
 	Text,
+	TextInput,
 	TouchableOpacity,
 	View,
 } from 'react-native';
 
+// Define types for the workout structure
+interface ExerciseSet {
+	id: string; // Unique ID for the set
+	previous: string;
+	kg: string;
+	reps: string;
+	completed: boolean;
+}
+
+interface WorkoutExercise {
+	name: string;
+	muscle: string;
+	sets: ExerciseSet[];
+	comment?: string; // Optional comment for the exercise
+}
+
+// Base exercise type (could be imported from a shared types file)
+interface BaseExercise {
+	name: string;
+	muscle: string;
+}
+
 export default function TrackWorkoutScreen() {
+	const params = useLocalSearchParams<{ exercisesData?: string }>();
+	const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
+		[]
+	);
+
 	const [timerRunning, setTimerRunning] = useState(true);
 	const [duration, setDuration] = useState(0); // time in seconds
-	const [volume, setVolume] = useState(0); // weight in kg
-	const [sets, setSets] = useState(9);
+	// Volume and Sets will be derived from workoutExercises
+	// const [volume, setVolume] = useState(0);
+	// const [sets, setSets] = useState(9);
+
+	useEffect(() => {
+		if (params.exercisesData) {
+			try {
+				const newExercisesRaw = JSON.parse(
+					params.exercisesData
+				) as BaseExercise[];
+				const newWorkoutExercises = newExercisesRaw.map((ex, index) => ({
+					...ex,
+					// Add a default first set when an exercise is added
+					sets: [
+						{
+							id: `set-${Date.now()}-${index}-0`,
+							previous: '-',
+							kg: '',
+							reps: '',
+							completed: false,
+						},
+					],
+					comment: '', // Initialize with an empty comment
+				}));
+
+				// Add new exercises, avoiding duplicates by name if re-navigating
+				setWorkoutExercises((prevExercises) => {
+					const existingNames = new Set(prevExercises.map((e) => e.name));
+					const trulyNew = newWorkoutExercises.filter(
+						(ne) => !existingNames.has(ne.name)
+					);
+					return [...prevExercises, ...trulyNew];
+				});
+
+				// Clear the param to prevent re-adding on remounts/re-renders if not desired
+				// Note: router.setParams might not be available or work as expected in all Expo Router versions for this.
+				// Consider alternative state management for "processed params" if issues arise.
+				if (router.canGoBack()) {
+					// Check if we can go back before trying to modify params
+					// This is a common pattern but might need adjustment based on your navigation flow
+					// router.setParams({ exercisesData: undefined });
+				}
+			} catch (error) {
+				console.error('Failed to parse exercisesData:', error);
+			}
+		}
+	}, [params.exercisesData]);
+
+	// Calculate total volume and sets from workoutExercises
+	const totalVolume = workoutExercises.reduce((acc, exercise) => {
+		return (
+			acc +
+			exercise.sets.reduce((setAcc, currentSet) => {
+				const weight = parseFloat(currentSet.kg) || 0;
+				const numReps = parseInt(currentSet.reps, 10) || 0;
+				// Assuming each rep contributes to volume; adjust if only completed sets count
+				return setAcc + weight * numReps;
+			}, 0)
+		);
+	}, 0);
+
+	const totalSets = workoutExercises.reduce((acc, exercise) => {
+		return acc + exercise.sets.length;
+	}, 0);
 
 	// Start the timer as soon as the screen loads
 	useEffect(() => {
@@ -70,6 +161,185 @@ export default function TrackWorkoutScreen() {
 		router.push('/(tabs)/workouts');
 	};
 
+	// Handlers for individual exercise sets
+	const handleSetChange = (
+		exerciseName: string,
+		setId: string,
+		field: keyof ExerciseSet,
+		value: string | boolean
+	) => {
+		setWorkoutExercises((prevExercises) =>
+			prevExercises.map((ex) =>
+				ex.name === exerciseName
+					? {
+							...ex,
+							sets: ex.sets.map((set) =>
+								set.id === setId ? { ...set, [field]: value } : set
+							),
+					  }
+					: ex
+			)
+		);
+	};
+
+	const addSetToExercise = (exerciseName: string) => {
+		setWorkoutExercises((prevExercises) =>
+			prevExercises.map((ex) =>
+				ex.name === exerciseName
+					? {
+							...ex,
+							sets: [
+								...ex.sets,
+								{
+									id: `set-${Date.now()}-${ex.name}-${ex.sets.length}`, // More unique ID
+									previous: `${
+										ex.sets.length > 0
+											? ex.sets[ex.sets.length - 1].kg +
+											  'kg x ' +
+											  ex.sets[ex.sets.length - 1].reps
+											: '-'
+									}`, // Carry over previous set's data
+									kg: ex.sets.length > 0 ? ex.sets[ex.sets.length - 1].kg : '',
+									reps:
+										ex.sets.length > 0 ? ex.sets[ex.sets.length - 1].reps : '',
+									completed: false,
+								},
+							],
+					  }
+					: ex
+			)
+		);
+	};
+
+	const removeSetFromExercise = (exerciseName: string, setId: string) => {
+		setWorkoutExercises((prevExercises) =>
+			prevExercises.map((ex) =>
+				ex.name === exerciseName
+					? {
+							...ex,
+							sets: ex.sets.filter((set) => set.id !== setId),
+					  }
+					: ex
+			)
+		);
+	};
+
+	const renderExerciseCard = ({
+		item: exercise,
+	}: {
+		item: WorkoutExercise;
+	}) => {
+		return (
+			<View style={styles.exerciseCard}>
+				<View style={styles.exerciseCardHeader}>
+					<View style={styles.exerciseIconPlaceholder} />
+					<View style={styles.exerciseTitleContainer}>
+						<Text style={styles.exerciseName}>{exercise.name}</Text>
+						<Text style={styles.exerciseComment}>
+							{exercise.comment || 'our comment will come here'}
+						</Text>
+					</View>
+					<TouchableOpacity style={styles.exerciseOptionsButton}>
+						<Ionicons name="ellipsis-vertical" size={24} color="white" />
+					</TouchableOpacity>
+				</View>
+
+				<View style={styles.setsTableHeader}>
+					<Text style={[styles.setsHeaderCell, styles.setNumCell]}>Set</Text>
+					<Text style={[styles.setsHeaderCell, styles.previousCell]}>
+						Previous
+					</Text>
+					<Text style={[styles.setsHeaderCell, styles.kgCell]}>Kg</Text>
+					<Text style={[styles.setsHeaderCell, styles.repsCell]}>Reps</Text>
+					<View style={[styles.checkboxCell]} />
+				</View>
+
+				{exercise.sets.map((set, index) => (
+					<View key={set.id} style={styles.setRow}>
+						<Text style={[styles.setDataCell, styles.setNumCell]}>
+							{index + 1}
+						</Text>
+						<Text style={[styles.setDataCell, styles.previousCell]}>
+							{set.previous}
+						</Text>
+						<TextInput
+							style={[styles.setDataInput, styles.kgCell]}
+							value={set.kg}
+							onChangeText={(text) =>
+								handleSetChange(exercise.name, set.id, 'kg', text)
+							}
+							keyboardType="numeric"
+							placeholder="-"
+							placeholderTextColor="#555"
+						/>
+						<TextInput
+							style={[styles.setDataInput, styles.repsCell]}
+							value={set.reps}
+							onChangeText={(text) =>
+								handleSetChange(exercise.name, set.id, 'reps', text)
+							}
+							keyboardType="numeric"
+							placeholder="-"
+							placeholderTextColor="#555"
+						/>
+						<TouchableOpacity
+							style={[styles.checkboxContainer, styles.checkboxCell]}
+							onPress={() =>
+								handleSetChange(
+									exercise.name,
+									set.id,
+									'completed',
+									!set.completed
+								)
+							}
+						>
+							<View
+								style={[
+									styles.checkbox,
+									set.completed && styles.checkboxCompleted,
+								]}
+							>
+								{set.completed && (
+									<Feather name="check" size={16} color="white" />
+								)}
+							</View>
+						</TouchableOpacity>
+						{exercise.sets.length > 1 && ( // Show remove button only if more than one set
+							<TouchableOpacity
+								onPress={() => removeSetFromExercise(exercise.name, set.id)}
+								style={styles.removeSetButton}
+							>
+								<Ionicons
+									name="remove-circle-outline"
+									size={20}
+									color="#FF5722"
+								/>
+							</TouchableOpacity>
+						)}
+					</View>
+				))}
+
+				<View style={styles.exerciseCardFooter}>
+					<TouchableOpacity
+						style={styles.addSetButton}
+						onPress={() => addSetToExercise(exercise.name)}
+					>
+						<Text style={styles.addSetButtonText}>+ Add Set</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.addCommentButton}>
+						<Ionicons
+							name="chatbubble-outline"
+							size={20}
+							color="#FF5722"
+							style={{ marginRight: 5 }}
+						/>
+						<Text style={styles.addCommentButtonText}>Add comment</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		);
+	};
+
 	return (
 		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
 			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
@@ -106,30 +376,41 @@ export default function TrackWorkoutScreen() {
 						</View>
 						<View style={styles.statItem}>
 							<Text style={styles.statLabel}>Volume</Text>
-							<Text style={styles.statValue}>{volume} kg</Text>
+							<Text style={styles.statValue}>{totalVolume} kg</Text>
 						</View>
 						<View style={styles.statItem}>
 							<Text style={styles.statLabel}>Sets</Text>
-							<Text style={styles.statValue}>{sets}</Text>
+							<Text style={styles.statValue}>{totalSets}</Text>
 						</View>
 					</View>
 
 					{/* Workout Content Area */}
-					<View style={styles.workoutContent}>
-						<View style={styles.dumbellIconContainer}>
-							<Feather name="hexagon" size={80} color="#333" />
-							<Ionicons
-								name="barbell-outline"
-								size={40}
-								color="#555"
-								style={styles.dumbellIcon}
-							/>
+					{workoutExercises.length === 0 ? (
+						<View style={styles.workoutContent}>
+							<View style={styles.dumbellIconContainer}>
+								<Feather name="hexagon" size={80} color="#333" />
+								<Ionicons
+									name="barbell-outline"
+									size={40}
+									color="#555"
+									style={styles.dumbellIcon}
+								/>
+							</View>
+							<Text style={styles.getStartedText}>Get Started</Text>
+							<Text style={styles.instructionText}>
+								Add an exercise to start your workout
+							</Text>
 						</View>
-						<Text style={styles.getStartedText}>Get Started</Text>
-						<Text style={styles.instructionText}>
-							Add an exercise to start your workout
-						</Text>
-					</View>
+					) : (
+						<FlatList
+							data={workoutExercises}
+							renderItem={renderExerciseCard}
+							keyExtractor={(item) => item.name}
+							style={styles.exerciseListContainer}
+							showsVerticalScrollIndicator={false}
+							ListFooterComponent={<View style={{ height: 20 }} />} // Add some padding at the bottom
+						/>
+					)}
 
 					{/* Add Exercise Button */}
 					<TouchableOpacity
@@ -167,8 +448,8 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		padding: 20,
-		paddingBottom: 100, // Add padding at the bottom to make room for the tab navigation
+		padding: 24,
+		paddingBottom: 100,
 	},
 	header: {
 		flexDirection: 'row',
@@ -199,11 +480,11 @@ const styles = StyleSheet.create({
 	},
 	statsCard: {
 		backgroundColor: '#1C1C1E',
-		borderRadius: 20,
-		padding: 20,
+		borderRadius: 16,
+		padding: 16,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginBottom: 40,
+		marginBottom: 32,
 	},
 	statItem: {
 		alignItems: 'center',
@@ -250,10 +531,10 @@ const styles = StyleSheet.create({
 	},
 	addButton: {
 		backgroundColor: '#FF5722',
-		borderRadius: 12,
+		borderRadius: 16,
 		padding: 16,
 		alignItems: 'center',
-		marginBottom: 20,
+		marginBottom: 24,
 	},
 	addButtonText: {
 		color: 'white',
@@ -263,11 +544,11 @@ const styles = StyleSheet.create({
 	bottomActions: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginBottom: 30,
+		marginBottom: 24,
 	},
 	settingsButton: {
 		backgroundColor: '#1C1C1E',
-		borderRadius: 12,
+		borderRadius: 16,
 		width: '48%',
 		alignItems: 'center',
 		padding: 16,
@@ -279,7 +560,7 @@ const styles = StyleSheet.create({
 	},
 	discardButton: {
 		backgroundColor: '#1C1C1E',
-		borderRadius: 12,
+		borderRadius: 16,
 		width: '48%',
 		alignItems: 'center',
 		padding: 16,
@@ -287,6 +568,134 @@ const styles = StyleSheet.create({
 	discardText: {
 		color: '#FF3B30',
 		fontSize: 16,
+		fontWeight: 'bold',
+	},
+	exerciseListContainer: {
+		flex: 1,
+		marginTop: 10, // Add some margin to separate from stats card
+	},
+	exerciseCard: {
+		backgroundColor: '#1C1C1E', // Dark card background
+		borderRadius: 14,
+		padding: 15,
+		marginBottom: 15,
+	},
+	exerciseCardHeader: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 15,
+	},
+	exerciseIconPlaceholder: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: '#333', // Placeholder color for exercise icon
+		marginRight: 12,
+	},
+	exerciseTitleContainer: {
+		flex: 1,
+	},
+	exerciseName: {
+		color: 'white',
+		fontSize: 17,
+		fontWeight: 'bold',
+	},
+	exerciseComment: {
+		color: '#8A8A8E', // Lighter gray for comment
+		fontSize: 13,
+	},
+	exerciseOptionsButton: {
+		padding: 5,
+	},
+	setsTableHeader: {
+		flexDirection: 'row',
+		borderBottomColor: '#3A3A3C',
+		borderBottomWidth: 1,
+		paddingBottom: 8,
+		marginBottom: 8,
+	},
+	setsHeaderCell: {
+		color: '#8A8A8E',
+		fontSize: 12,
+		fontWeight: '600',
+	},
+	setRow: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 10,
+		paddingVertical: 5,
+	},
+	setDataCell: {
+		color: 'white',
+		fontSize: 14,
+		textAlign: 'center',
+	},
+	setDataInput: {
+		color: 'white',
+		fontSize: 14,
+		textAlign: 'center',
+		paddingVertical: 5, // Added padding for better touch
+		// backgroundColor: '#2C2C2E', // Slightly different background for input
+		// borderRadius: 5,
+	},
+	setNumCell: { flex: 0.15, textAlign: 'left' },
+	previousCell: { flex: 0.25 },
+	kgCell: { flex: 0.2 },
+	repsCell: { flex: 0.2 },
+	checkboxCell: { flex: 0.15, alignItems: 'flex-end' },
+	checkboxContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingRight: 5, // Align checkbox better
+	},
+	checkbox: {
+		width: 22,
+		height: 22,
+		borderRadius: 5,
+		borderWidth: 1.5,
+		borderColor: '#555',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	checkboxCompleted: {
+		backgroundColor: '#FF5722', // Orange for completed
+		borderColor: '#FF5722',
+	},
+	removeSetButton: {
+		paddingLeft: 8, // Space from checkbox
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	exerciseCardFooter: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginTop: 10,
+		paddingTop: 10,
+		borderTopColor: '#3A3A3C',
+		borderTopWidth: 1,
+	},
+	addSetButton: {
+		backgroundColor: '#FF5722',
+		paddingVertical: 8,
+		paddingHorizontal: 15,
+		borderRadius: 8,
+	},
+	addSetButtonText: {
+		color: 'white',
+		fontSize: 13,
+		fontWeight: 'bold',
+	},
+	addCommentButton: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		backgroundColor: '#2C2C2E', // Darker button for secondary action
+		paddingVertical: 8,
+		paddingHorizontal: 12,
+		borderRadius: 8,
+	},
+	addCommentButtonText: {
+		color: '#FF5722', // Orange text
+		fontSize: 13,
 		fontWeight: 'bold',
 	},
 });

@@ -17,13 +17,13 @@ export default function TabLayout() {
 					height: 60, // Adjust height as needed
 					paddingBottom: 5,
 					marginBottom: 8,
-					marginHorizontal: 10, // Add padding for visual spacing if needed
-					borderRadius: 20,
+					marginHorizontal: 24, // Match grid system margins (24px)
+					borderRadius: 16, // Match grid system gutter (16px)
 					overflow: 'hidden',
 					position: 'absolute',
-					bottom: 20,
-					left: 20,
-					right: 20,
+					bottom: 24, // Match grid system margins (24px)
+					left: 24, // Match grid system margins (24px)
+					right: 24, // Match grid system margins (24px)
 					alignItems: 'center',
 					justifyContent: 'center',
 				},

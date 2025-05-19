@@ -120,6 +120,9 @@ export default function SearchWorkoutScreen() {
 	const [selectedFilter, setSelectedFilter] = useState('Machine exercises');
 	const [filteredExercises, setFilteredExercises] =
 		useState<Exercise[]>(exercises);
+	const [currentlySelectedExercises, setCurrentlySelectedExercises] = useState<
+		Exercise[]
+	>([]);
 
 	// Filter exercises based on search text and selected filter
 	useEffect(() => {
@@ -143,9 +146,27 @@ export default function SearchWorkoutScreen() {
 	};
 
 	const selectExercise = (exercise: Exercise) => {
-		// Here we'd typically add the exercise to the workout
-		// For now, just navigate back
-		router.back();
+		setCurrentlySelectedExercises((prevSelected) => {
+			const isAlreadySelected = prevSelected.find(
+				(ex) => ex.name === exercise.name
+			);
+			if (isAlreadySelected) {
+				// Deselect if already selected
+				return prevSelected.filter((ex) => ex.name !== exercise.name);
+			} else {
+				// Select if not already selected
+				return [...prevSelected, exercise];
+			}
+		});
+	};
+
+	const addExercisesToWorkout = () => {
+		if (currentlySelectedExercises.length > 0) {
+			router.push({
+				pathname: '../track-workout/',
+				params: { exercisesData: JSON.stringify(currentlySelectedExercises) },
+			});
+		}
 	};
 
 	const renderFilterPill = ({ item }: { item: string }) => (
@@ -167,133 +188,152 @@ export default function SearchWorkoutScreen() {
 		</TouchableOpacity>
 	);
 
-	const renderExerciseItem = ({ item }: { item: Exercise }) => (
-		<TouchableOpacity
-			style={styles.exerciseItem}
-			onPress={() => selectExercise(item)}
-		>
-			<View style={styles.exerciseImagePlaceholder} />
-			<View style={styles.exerciseInfo}>
-				<Text style={styles.exerciseName}>{item.name}</Text>
-				<Text style={styles.exerciseMuscle}>{item.muscle}</Text>
-			</View>
-			<View style={styles.exerciseChart} />
-		</TouchableOpacity>
-	);
+	const renderExerciseItem = ({ item }: { item: Exercise }) => {
+		const isSelected = currentlySelectedExercises.some(
+			(ex) => ex.name === item.name
+		);
+		return (
+			<TouchableOpacity
+				style={[styles.exerciseItem, isSelected && styles.selectedExerciseItem]}
+				onPress={() => selectExercise(item)}
+			>
+				<View style={styles.exerciseImagePlaceholder} />
+				<View style={styles.exerciseInfo}>
+					<Text style={styles.exerciseName}>{item.name}</Text>
+					<Text style={styles.exerciseMuscle}>{item.muscle}</Text>
+				</View>
+				<View style={styles.exerciseChart} />
+			</TouchableOpacity>
+		);
+	};
 
 	return (
-		<SafeAreaView style={styles.container}>
+		<SafeAreaView style={styles.safeArea}>
 			<StatusBar
 				barStyle="light-content"
 				backgroundColor="#000000"
 				translucent={Platform.OS === 'android'}
 			/>
 
-			{/* Header */}
-			<View style={styles.header}>
-				<TouchableOpacity style={styles.backButton} onPress={goBack}>
-					<Feather name="chevron-left" size={32} color="white" />
-				</TouchableOpacity>
-				<Text style={styles.headerTitle}>Search Workout</Text>
-				<TouchableOpacity style={styles.timerButton}>
-					<Ionicons name="alarm" size={28} color="#FF5722" />
-				</TouchableOpacity>
-			</View>
-
-			{/* Search Input */}
-			<View style={styles.searchContainer}>
-				<Feather
-					name="search"
-					size={24}
-					color="#666"
-					style={styles.searchIcon}
-				/>
-				<TextInput
-					style={styles.searchInput}
-					placeholder="search you workout"
-					placeholderTextColor="#666"
-					value={searchText}
-					onChangeText={setSearchText}
-				/>
-			</View>
-
-			{/* Main Content Container */}
-			<View style={styles.mainContent}>
-				{/* Filter Pills */}
-				<View style={styles.filterWrapper}>
-					<ScrollView
-						horizontal
-						showsHorizontalScrollIndicator={false}
-						contentContainerStyle={styles.filterContent}
-					>
-						{getMuscleGroups().map((item) => (
-							<TouchableOpacity
-								key={item}
-								style={[
-									styles.filterPill,
-									selectedFilter === item && styles.selectedFilterPill,
-								]}
-								onPress={() => setSelectedFilter(item)}
-							>
-								<Text
-									style={[
-										styles.filterPillText,
-										selectedFilter === item && styles.selectedFilterPillText,
-									]}
-								>
-									{item}
-								</Text>
-							</TouchableOpacity>
-						))}
-					</ScrollView>
+			<View style={styles.container}>
+				{/* Header */}
+				<View style={styles.header}>
+					<TouchableOpacity style={styles.backButton} onPress={goBack}>
+						<Feather name="chevron-left" size={24} color="white" />
+					</TouchableOpacity>
+					<Text style={styles.headerTitle}>Search Workout</Text>
+					<TouchableOpacity style={styles.timerButton}>
+						<Ionicons name="alarm" size={24} color="#FF5722" />
+					</TouchableOpacity>
 				</View>
 
-				{/* Exercise List */}
-				{filteredExercises.length > 0 ? (
-					<FlatList
-						data={filteredExercises}
-						renderItem={renderExerciseItem}
-						keyExtractor={(item: Exercise): string => item.name}
-						showsVerticalScrollIndicator={false}
-						contentContainerStyle={styles.exerciseListContent}
-						style={styles.exerciseList}
+				{/* Search Input */}
+				<View style={styles.searchContainer}>
+					<Feather
+						name="search"
+						size={24}
+						color="#666"
+						style={styles.searchIcon}
 					/>
-				) : (
-					<View style={styles.noResults}>
-						<Text style={styles.noResultsText}>No exercises found</Text>
+					<TextInput
+						style={styles.searchInput}
+						placeholder="search you workout"
+						placeholderTextColor="#666"
+						value={searchText}
+						onChangeText={setSearchText}
+					/>
+				</View>
+
+				{/* Main Content Container */}
+				<View style={styles.mainContent}>
+					{/* Filter Pills */}
+					<View style={styles.filterWrapper}>
+						<ScrollView
+							horizontal
+							showsHorizontalScrollIndicator={false}
+							contentContainerStyle={styles.filterContent}
+						>
+							{getMuscleGroups().map((item) => (
+								<TouchableOpacity
+									key={item}
+									style={[
+										styles.filterPill,
+										selectedFilter === item && styles.selectedFilterPill,
+									]}
+									onPress={() => setSelectedFilter(item)}
+								>
+									<Text
+										style={[
+											styles.filterPillText,
+											selectedFilter === item && styles.selectedFilterPillText,
+										]}
+									>
+										{item}
+									</Text>
+								</TouchableOpacity>
+							))}
+						</ScrollView>
 					</View>
-				)}
+
+					{/* Exercise List */}
+					{filteredExercises.length > 0 ? (
+						<FlatList
+							data={filteredExercises}
+							renderItem={renderExerciseItem}
+							keyExtractor={(item: Exercise): string => item.name}
+							showsVerticalScrollIndicator={false}
+							contentContainerStyle={styles.exerciseListContent}
+							style={styles.exerciseList}
+						/>
+					) : (
+						<View style={styles.noResults}>
+							<Text style={styles.noResultsText}>No exercises found</Text>
+						</View>
+					)}
+
+					{/* "Add to Workout" Button */}
+					{currentlySelectedExercises.length > 0 && (
+						<TouchableOpacity
+							style={styles.addExerciseButton}
+							onPress={addExercisesToWorkout}
+						>
+							<Text style={styles.addExerciseButtonText}>
+								Add to Workout ({currentlySelectedExercises.length})
+							</Text>
+						</TouchableOpacity>
+					)}
+				</View>
 			</View>
 		</SafeAreaView>
 	);
 }
 
 const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: '#000000',
+		paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+	},
 	container: {
 		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop:
-			Platform.OS === 'android'
-				? StatusBar.currentHeight
-					? StatusBar.currentHeight + 20
-					: 40
-				: 20,
+		paddingHorizontal: 15,
+		paddingTop: Platform.OS === 'android' ? 10 : 0,
 		paddingBottom: 0,
-		backgroundColor: '#000000',
 	},
 	header: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		marginBottom: 15,
+		marginBottom: 10,
+		paddingHorizontal: 0,
 	},
 	backButton: {
-		width: 50,
-		height: 50,
+		width: 45,
+		height: 45,
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: '#1C1C1E',
-		borderRadius: 25,
+		borderRadius: 23,
 	},
 	headerTitle: {
 		color: 'white',
@@ -301,21 +341,22 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 	},
 	timerButton: {
-		width: 50,
-		height: 50,
+		width: 48,
+		height: 48,
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: '#1C1C1E',
-		borderRadius: 25,
+		borderRadius: 24,
 	},
 	searchContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		backgroundColor: '#1C1C1E',
-		borderRadius: 12,
+		borderRadius: 14,
 		paddingHorizontal: 15,
-		marginBottom: 10,
-		height: 50,
+		marginBottom: 12,
+		height: 45,
+		width: '100%',
 	},
 	searchIcon: {
 		marginRight: 10,
@@ -328,21 +369,24 @@ const styles = StyleSheet.create({
 	},
 	mainContent: {
 		flex: 1,
-		marginBottom: 80, // Adjust for tab bar
+		marginBottom: 88, // Adjust for tab bar and consistent spacing
+		width: '100%',
 	},
 	filterWrapper: {
 		height: 40,
-		marginBottom: 10,
+		marginBottom: 16,
+		width: '100%',
 	},
 	filterContent: {
 		paddingVertical: 5,
+		paddingHorizontal: 0,
 		alignItems: 'center',
 	},
 	filterPill: {
 		backgroundColor: '#1C1C1E',
 		paddingVertical: 6,
-		paddingHorizontal: 14,
-		borderRadius: 16,
+		paddingHorizontal: 12,
+		borderRadius: 10,
 		marginRight: 8,
 		height: 30,
 		justifyContent: 'center',
@@ -366,9 +410,9 @@ const styles = StyleSheet.create({
 	exerciseItem: {
 		flexDirection: 'row',
 		backgroundColor: '#1C1C1E',
-		borderRadius: 12,
+		borderRadius: 14,
 		padding: 15,
-		marginBottom: 10,
+		marginBottom: 12,
 		alignItems: 'center',
 	},
 	exerciseImagePlaceholder: {
@@ -405,5 +449,23 @@ const styles = StyleSheet.create({
 	noResultsText: {
 		color: '#999',
 		fontSize: 16,
+	},
+	selectedExerciseItem: {
+		backgroundColor: '#FF5722',
+	},
+	addExerciseButton: {
+		backgroundColor: '#FF5722',
+		paddingVertical: 15,
+		paddingHorizontal: 20,
+		borderRadius: 10,
+		alignItems: 'center',
+		marginHorizontal: 0, // Aligns with padding of mainContent
+		marginTop: 15,
+		marginBottom: 10, // Ensures it's above the mainContent's overall marginBottom if any visual conflicts
+	},
+	addExerciseButtonText: {
+		color: 'white',
+		fontSize: 18,
+		fontWeight: 'bold',
 	},
 });
