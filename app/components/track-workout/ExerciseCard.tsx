@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -29,6 +29,13 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 	removeSetFromExercise,
 	openCommentModal,
 }) => {
+	const [unit, setUnit] = useState<'Kg' | 'Lbs'>('Kg');
+
+	// Function to toggle the unit
+	const toggleUnit = () => {
+		setUnit((prevUnit) => (prevUnit === 'Kg' ? 'Lbs' : 'Kg'));
+	};
+
 	// Determine if a set is completed based on having both kg and reps
 	const isSetCompleted = (set: ExerciseSet): boolean => {
 		return !!(
@@ -79,7 +86,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 						<Text style={styles.headerText}>Previous</Text>
 					</View>
 					<View style={styles.cellKg}>
-						<Text style={styles.headerText}>Kg</Text>
+						<TouchableOpacity onPress={toggleUnit}>
+							<Text style={styles.headerText}>{unit}</Text>
+						</TouchableOpacity>
 					</View>
 					<View style={styles.cellReps}>
 						<Text style={styles.headerText}>Reps</Text>

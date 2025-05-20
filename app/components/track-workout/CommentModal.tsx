@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import {
 	Keyboard,
 	Modal,
+	Platform,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -27,21 +28,46 @@ export const CommentModal: React.FC<CommentModalProps> = ({
 }) => {
 	const inputRef = useRef<TextInput>(null);
 
+	// Use useEffect to focus the input and show keyboard when modal becomes visible
 	useEffect(() => {
 		if (isVisible) {
-			// Dismiss any existing keyboard first
-			Keyboard.dismiss();
+			// Use multiple timing approaches to ensure focus works
+			// First focus attempt - immediate
+			if (inputRef.current) {
+				inputRef.current.focus();
+			}
 
-			const timer = setTimeout(() => {
+			// Second focus attempt - short delay (100ms)
+			const timer1 = setTimeout(() => {
+				if (inputRef.current) {
+					inputRef.current.focus();
+					// On iOS, sometimes we need to explicitly show the keyboard
+					if (Platform.OS === 'ios') {
+						Keyboard.dismiss();
+						inputRef.current.focus();
+					}
+				}
+			}, 100);
+
+			// Third focus attempt - longer delay (300ms) for after animations
+			const timer2 = setTimeout(() => {
 				if (inputRef.current) {
 					inputRef.current.focus();
 				}
-			}, 300); // Delay to allow modal to animate and input to be ready
+			}, 300);
 
-			return () => clearTimeout(timer);
-		} else {
-			// Optional: Dismiss keyboard when modal is hidden
-			// Keyboard.dismiss();
+			// Final attempt with an even longer delay (600ms)
+			const timer3 = setTimeout(() => {
+				if (inputRef.current) {
+					inputRef.current.focus();
+				}
+			}, 600);
+
+			return () => {
+				clearTimeout(timer1);
+				clearTimeout(timer2);
+				clearTimeout(timer3);
+			};
 		}
 	}, [isVisible]);
 
@@ -50,7 +76,13 @@ export const CommentModal: React.FC<CommentModalProps> = ({
 			animationType="fade"
 			transparent={true}
 			visible={isVisible}
-			onRequestClose={onClose} // Allows closing with back button on Android
+			onRequestClose={onClose}
+			onShow={() => {
+				// Focus attempt on modal show event
+				setTimeout(() => {
+					inputRef.current?.focus();
+				}, 150);
+			}}
 		>
 			<View style={styles.modalBackdrop}>
 				<View style={styles.modalContainer}>
@@ -60,6 +92,7 @@ export const CommentModal: React.FC<CommentModalProps> = ({
 					<Text style={styles.modalTitle}>Add your comment for exercise</Text>
 					<TextInput
 						ref={inputRef}
+						autoFocus={true}
 						style={styles.modalTextInput}
 						placeholder="Enter your comment..."
 						placeholderTextColor="#888"
@@ -69,7 +102,6 @@ export const CommentModal: React.FC<CommentModalProps> = ({
 						numberOfLines={4}
 						returnKeyType="done"
 						onSubmitEditing={() => {
-							// Keyboard.dismiss(); // Optionally dismiss keyboard
 							// onSave(); // Or call save if that's the desired behavior
 						}}
 					/>
