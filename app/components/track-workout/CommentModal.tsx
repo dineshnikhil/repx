@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import {
+	Keyboard,
 	Modal,
 	StyleSheet,
 	Text,
@@ -24,18 +25,23 @@ export const CommentModal: React.FC<CommentModalProps> = ({
 	onSave,
 	onClose,
 }) => {
-	// Create a ref for the TextInput
 	const inputRef = useRef<TextInput>(null);
 
-	// Focus the TextInput when the modal becomes visible
 	useEffect(() => {
-		if (isVisible && inputRef.current) {
-			// Add a small delay to ensure the modal is fully visible before focusing
+		if (isVisible) {
+			// Dismiss any existing keyboard first
+			Keyboard.dismiss();
+
 			const timer = setTimeout(() => {
-				inputRef.current?.focus();
-			}, 100);
+				if (inputRef.current) {
+					inputRef.current.focus();
+				}
+			}, 300); // Delay to allow modal to animate and input to be ready
 
 			return () => clearTimeout(timer);
+		} else {
+			// Optional: Dismiss keyboard when modal is hidden
+			// Keyboard.dismiss();
 		}
 	}, [isVisible]);
 
@@ -44,7 +50,7 @@ export const CommentModal: React.FC<CommentModalProps> = ({
 			animationType="fade"
 			transparent={true}
 			visible={isVisible}
-			onRequestClose={onClose}
+			onRequestClose={onClose} // Allows closing with back button on Android
 		>
 			<View style={styles.modalBackdrop}>
 				<View style={styles.modalContainer}>
@@ -61,7 +67,11 @@ export const CommentModal: React.FC<CommentModalProps> = ({
 						onChangeText={onChangeText}
 						multiline={true}
 						numberOfLines={4}
-						autoFocus={isVisible}
+						returnKeyType="done"
+						onSubmitEditing={() => {
+							// Keyboard.dismiss(); // Optionally dismiss keyboard
+							// onSave(); // Or call save if that's the desired behavior
+						}}
 					/>
 					<TouchableOpacity style={styles.modalButtonOrange} onPress={onSave}>
 						<Text style={styles.modalButtonText}>Add Comment</Text>

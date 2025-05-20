@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -39,6 +39,21 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 		);
 	};
 
+	// Effect to update completed status after render
+	useEffect(() => {
+		exercise.sets.forEach((set) => {
+			const calculatedCompleted = isSetCompleted(set);
+			if (calculatedCompleted !== set.completed) {
+				handleSetChange(
+					exercise.name,
+					set.id,
+					'completed',
+					calculatedCompleted
+				);
+			}
+		});
+	}, [exercise.sets, exercise.name, handleSetChange]); // Dependencies for the effect
+
 	return (
 		<View style={styles.exerciseCard}>
 			<View style={styles.exerciseCardHeader}>
@@ -77,13 +92,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
 				{/* Table data rows */}
 				{exercise.sets.map((set, index) => {
-					// Check if set is completed based on kg and reps
-					const setCompleted = isSetCompleted(set);
-
-					// Update the set's completed status if needed
-					if (setCompleted !== set.completed) {
-						handleSetChange(exercise.name, set.id, 'completed', setCompleted);
-					}
+					// set.completed will be updated by the useEffect, so we can use it directly for styling here
+					// The direct call to handleSetChange is removed from here
+					const setCompleted = set.completed;
 
 					return (
 						<View
@@ -225,22 +236,27 @@ const styles = StyleSheet.create({
 	cellSet: {
 		width: '12%',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	cellPrevious: {
 		width: '28%',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	cellKg: {
 		width: '25%',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	cellReps: {
 		width: '25%',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	cellAction: {
 		width: '10%',
 		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	headerText: {
 		color: '#8A8A8E',
