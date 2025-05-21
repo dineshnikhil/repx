@@ -17,6 +17,7 @@ import { ExerciseCard } from '../../components/track-workout/ExerciseCard';
 import { GetStarted } from '../../components/track-workout/GetStarted';
 import { Header } from '../../components/track-workout/Header';
 import { StatsCard } from '../../components/track-workout/StatsCard';
+import { WorkoutNameModal } from '../../components/track-workout/WorkoutNameModal';
 import { useWorkoutStatus } from '../../contexts/WorkoutStatusContext';
 import {
 	BaseExercise,
@@ -31,18 +32,26 @@ declare global {
 	}
 }
 
+// Add this to your WorkoutExercise type or extend it here for clarity
+interface WorkoutExerciseWithUnit extends WorkoutExercise {
+	weightUnit?: 'Kg' | 'Lbs';
+}
+
 export default function TrackWorkoutScreen() {
 	// Use a ref to track if we've processed parameters to avoid reprocessing
 	const hasProcessedParams = useRef(false);
 	const params = useLocalSearchParams();
 
 	// Use regular state for workout exercises
-	const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
-		[]
-	);
+	const [workoutExercises, setWorkoutExercises] = useState<
+		WorkoutExerciseWithUnit[]
+	>([]);
 
 	const [timerRunning, setTimerRunning] = useState(true);
 	const [duration, setDuration] = useState(0);
+	const [workoutName, setWorkoutName] = useState('Track Workout');
+	const [isWorkoutNameModalVisible, setWorkoutNameModalVisible] =
+		useState(false);
 
 	// Modal States
 	const [isCommentModalVisible, setCommentModalVisible] = useState(false);
@@ -181,7 +190,12 @@ export default function TrackWorkoutScreen() {
 			exercise.sets.reduce((setAcc, currentSet) => {
 				const weight = parseFloat(currentSet.kg) || 0;
 				const numReps = parseInt(currentSet.reps, 10) || 0;
-				return setAcc + weight * numReps;
+				// Convert lbs to kg if the exercise is using lbs
+				const convertedWeight =
+					exercise.weightUnit === 'Lbs'
+						? weight * 0.45359237 // lbs to kg conversion
+						: weight;
+				return setAcc + convertedWeight * numReps;
 			}, 0)
 		);
 	}, 0);
@@ -339,19 +353,64 @@ export default function TrackWorkoutScreen() {
 		setDiscardModalVisible(false);
 	};
 
+	// Workout name modal functions
+	const openWorkoutNameModal = () => {
+		setWorkoutNameModalVisible(true);
+	};
+
+	const handleSaveWorkoutName = (name: string) => {
+		setWorkoutName(name);
+		// Also update in workout status context if needed
+		if (isWorkoutInProgress) {
+			setWorkoutNameToResume(name);
+		}
+	};
+
+	const handleCloseWorkoutNameModal = () => {
+		setWorkoutNameModalVisible(false);
+	};
+
 	// Effect to update the workout status in context
 	useEffect(() => {
 		// Update workout status whenever workoutExercises changes
 		const inProgress = workoutExercises.length > 0;
+		console.log(
+			'Setting workout in progress:',
+			inProgress,
+			'with name:',
+			workoutName
+		);
+
 		setIsWorkoutInProgress(inProgress);
 
 		// Set a workout name if there are exercises
-		if (inProgress) {
-			setWorkoutNameToResume('Active Workout');
+		if (inProgress && workoutNameToResume && workoutName === 'Track Workout') {
+			setWorkoutName(workoutNameToResume);
+		} else if (inProgress) {
+			setWorkoutNameToResume(workoutName);
 		} else {
 			setWorkoutNameToResume(null);
 		}
-	}, [workoutExercises.length, setIsWorkoutInProgress, setWorkoutNameToResume]);
+	}, [
+		workoutExercises.length,
+		setIsWorkoutInProgress,
+		setWorkoutNameToResume,
+		workoutName,
+	]);
+
+	// Function to update weight unit for an exercise
+	const updateWeightUnit = (exerciseName: string, unit: 'Kg' | 'Lbs') => {
+		setWorkoutExercises((prevExercises) =>
+			prevExercises.map((ex) =>
+				ex.name === exerciseName
+					? {
+							...ex,
+							weightUnit: unit,
+					  }
+					: ex
+			)
+		);
+	};
 
 	// Footer component for the exercise list
 	const ExerciseListFooter = () => (
@@ -361,7 +420,7 @@ export default function TrackWorkoutScreen() {
 			</TouchableOpacity>
 			<View style={styles.bottomActions}>
 				<TouchableOpacity style={styles.settingsButton}>
-					<Text style={styles.settingsText}>Settings</Text>
+					<Text style={styles.settingsText}>Finish</Text>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.discardButton} onPress={discardWorkout}>
 					<Text style={styles.discardText}>Discard Workout</Text>
@@ -383,7 +442,12 @@ export default function TrackWorkoutScreen() {
 				{/* Non-scrollable top section */}
 				<View style={styles.topSectionContainer}>
 					{/* Header */}
-					<Header toggleTimer={toggleTimer} timerRunning={timerRunning} />
+					<Header
+						toggleTimer={toggleTimer}
+						timerRunning={timerRunning}
+						workoutName={workoutName}
+						onTitlePress={openWorkoutNameModal}
+					/>
 
 					{/* Workout Stats */}
 					<StatsCard
@@ -411,6 +475,7 @@ export default function TrackWorkoutScreen() {
 									addSetToExercise={addSetToExercise}
 									removeSetFromExercise={removeSetFromExercise}
 									openCommentModal={openCommentModal}
+									updateWeightUnit={updateWeightUnit}
 								/>
 							)}
 							keyExtractor={(item) => item.name}
@@ -437,6 +502,14 @@ export default function TrackWorkoutScreen() {
 					isVisible={isDiscardModalVisible}
 					onConfirm={handleConfirmDiscard}
 					onCancel={handleCloseDiscardModal}
+				/>
+
+				{/* Workout Name Modal */}
+				<WorkoutNameModal
+					isVisible={isWorkoutNameModalVisible}
+					currentName={workoutName}
+					onSave={handleSaveWorkoutName}
+					onClose={handleCloseWorkoutNameModal}
 				/>
 			</SafeAreaView>
 		</LinearGradient>

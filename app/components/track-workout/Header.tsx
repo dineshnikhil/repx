@@ -6,11 +6,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface HeaderProps {
 	toggleTimer: () => void;
 	timerRunning: boolean;
+	workoutName: string;
+	onTitlePress: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
 	toggleTimer,
 	timerRunning,
+	workoutName,
+	onTitlePress,
 }) => {
 	const goBack = () => {
 		router.push('/(tabs)/workouts');
@@ -21,7 +25,17 @@ export const Header: React.FC<HeaderProps> = ({
 			<TouchableOpacity style={styles.backButton} onPress={goBack}>
 				<Feather name="chevron-left" size={32} color="white" />
 			</TouchableOpacity>
-			<Text style={styles.headerTitle}>Track Workout</Text>
+			<TouchableOpacity onPress={onTitlePress} activeOpacity={0.7}>
+				<View style={styles.titleContainer}>
+					<Text style={styles.headerTitle}>{workoutName}</Text>
+					<Feather
+						name="edit-2"
+						size={14}
+						color="#FF5722"
+						style={styles.editIcon}
+					/>
+				</View>
+			</TouchableOpacity>
 			<TouchableOpacity style={styles.timerButton} onPress={toggleTimer}>
 				<Ionicons
 					name={timerRunning ? 'alarm' : 'alarm-outline'}
@@ -48,10 +62,18 @@ const styles = StyleSheet.create({
 		backgroundColor: '#1C1C1E',
 		borderRadius: 25,
 	},
+	titleContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
 	headerTitle: {
 		color: 'white',
 		fontSize: 24,
 		fontWeight: 'bold',
+	},
+	editIcon: {
+		marginLeft: 8,
 	},
 	timerButton: {
 		width: 50,

@@ -5,7 +5,7 @@ interface StatsCardProps {
 	duration: number;
 	totalVolume: number;
 	totalSets: number;
-	formatDuration: (totalSeconds: number) => string;
+	formatDuration: (seconds: number) => string;
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({
@@ -16,18 +16,21 @@ export const StatsCard: React.FC<StatsCardProps> = ({
 }) => {
 	return (
 		<View style={styles.statsCard}>
-			<View style={styles.statItem}>
-				<Text style={styles.statLabel}>Duration</Text>
-				<Text style={styles.statValueHighlighted}>
-					{formatDuration(duration)}
+			<View style={styles.statColumn}>
+				<Text style={styles.statTitle}>Duration</Text>
+				<Text style={styles.statValue}>{formatDuration(duration)}</Text>
+			</View>
+			<View style={styles.statDivider} />
+			<View style={styles.statColumn}>
+				<Text style={styles.statTitle}>Volume</Text>
+				<Text style={styles.statValue}>
+					{totalVolume.toLocaleString(undefined, { maximumFractionDigits: 1 })}{' '}
+					<Text style={styles.statUnit}>kg</Text>
 				</Text>
 			</View>
-			<View style={styles.statItem}>
-				<Text style={styles.statLabel}>Volume</Text>
-				<Text style={styles.statValue}>{totalVolume} kg</Text>
-			</View>
-			<View style={styles.statItem}>
-				<Text style={styles.statLabel}>Sets</Text>
+			<View style={styles.statDivider} />
+			<View style={styles.statColumn}>
+				<Text style={styles.statTitle}>Sets</Text>
 				<Text style={styles.statValue}>{totalSets}</Text>
 			</View>
 		</View>
@@ -38,27 +41,32 @@ const styles = StyleSheet.create({
 	statsCard: {
 		backgroundColor: '#1C1C1E',
 		borderRadius: 16,
-		padding: 16,
 		flexDirection: 'row',
-		justifyContent: 'space-between',
-		marginBottom: 32,
+		padding: 16,
+		marginTop: 16,
+		marginBottom: 20,
 	},
-	statItem: {
+	statColumn: {
+		flex: 1,
 		alignItems: 'center',
 	},
-	statLabel: {
-		color: '#999',
-		fontSize: 16,
-		marginBottom: 8,
+	statDivider: {
+		width: 1,
+		backgroundColor: '#2C2C2E',
+		marginHorizontal: 10,
+	},
+	statTitle: {
+		color: '#8A8A8E',
+		fontSize: 14,
+		marginBottom: 4,
 	},
 	statValue: {
 		color: 'white',
 		fontSize: 16,
 		fontWeight: 'bold',
 	},
-	statValueHighlighted: {
-		color: '#FF5722',
-		fontSize: 16,
-		fontWeight: 'bold',
+	statUnit: {
+		fontSize: 12,
+		color: '#8A8A8E',
 	},
 });

@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
 	},
 	volumeTooltip: {
 		position: 'absolute',
-		top: '40%',
+		top: '10%',
 		transform: [{ translateX: -60 }],
 		backgroundColor: 'rgba(20, 20, 20, 0.85)',
 		borderRadius: 12,
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
 	},
 	volumeValue: {
 		color: 'white',
-		fontSize: 18,
+		fontSize: 12,
 		fontWeight: 'bold',
 		textAlign: 'center',
 	},

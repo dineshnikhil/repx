@@ -20,6 +20,7 @@ interface ExerciseCardProps {
 	addSetToExercise: (exerciseName: string) => void;
 	removeSetFromExercise: (exerciseName: string, setId: string) => void;
 	openCommentModal: (exerciseName: string) => void;
+	updateWeightUnit: (exerciseName: string, unit: 'Kg' | 'Lbs') => void;
 }
 
 export const ExerciseCard: React.FC<ExerciseCardProps> = ({
@@ -28,12 +29,15 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 	addSetToExercise,
 	removeSetFromExercise,
 	openCommentModal,
+	updateWeightUnit,
 }) => {
 	const [unit, setUnit] = useState<'Kg' | 'Lbs'>('Kg');
 
 	// Function to toggle the unit
 	const toggleUnit = () => {
-		setUnit((prevUnit) => (prevUnit === 'Kg' ? 'Lbs' : 'Kg'));
+		const newUnit = unit === 'Kg' ? 'Lbs' : 'Kg';
+		setUnit(newUnit);
+		updateWeightUnit(exercise.name, newUnit);
 	};
 
 	// Determine if a set is completed based on having both kg and reps
@@ -231,10 +235,12 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		paddingVertical: 8,
 		borderRadius: 6,
+		backgroundColor: '#2C2C2E',
 		marginBottom: 8,
 	},
 	completedRow: {
-		backgroundColor: 'rgba(46, 139, 87, 0.25)',
+		backgroundColor: '#2C2C2E',
+		// backgroundColor: 'rgba(46, 139, 87, 0.25)',
 	},
 	divider: {
 		height: 1,
