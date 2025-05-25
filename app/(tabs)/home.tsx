@@ -1,5 +1,4 @@
 import { Feather } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -107,12 +106,12 @@ export default function HomeScreen() {
 	};
 
 	return (
-		<LinearGradient colors={['#000000', '#000000']} style={styles.gradient}> 
+		<LinearGradient colors={['#000000', '#000000']} style={styles.gradient}>
 			{/* Changed to black gradient for a solid dark background */}
 			{/* <BlurView intensity={10} tint="dark" style={StyleSheet.absoluteFill} /> */}
-            {/* BlurView might not be needed if going for a solid black background, or adjust intensity/tint if you want a subtle effect */}
+			{/* BlurView might not be needed if going for a solid black background, or adjust intensity/tint if you want a subtle effect */}
 			<SafeAreaView style={styles.safeArea}>
-				<StatusBar 
+				<StatusBar
 					barStyle="light-content" // Ensures status bar text/icons are light
 					backgroundColor="#000000" // Match the screen background
 				/>
@@ -296,7 +295,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: 15,
 		marginTop: Platform.OS === 'ios' ? 10 : 20, // Adjusted margin for better spacing
-		marginBottom: 20, // Adjusted margin
+		marginBottom: 15, // Adjusted margin
 	},
 	profileInfo: {
 		flexDirection: 'row',
@@ -453,6 +452,6 @@ const styles = StyleSheet.create({
 
 // Make sure to update the Feather icon colors directly in the JSX where they are used:
 // Example for Notification Bell:
-// <Feather name="bell" size={24} color="#FF6B00" /> 
+// <Feather name="bell" size={24} color="#FF6B00" />
 // Example for Chevron in Time Range Button:
 // <Feather name="chevron-down" size={16} color="#FFFFFF" />

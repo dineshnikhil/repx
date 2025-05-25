@@ -12,22 +12,22 @@ import {
 import { useWorkoutStatus } from '../contexts/WorkoutStatusContext';
 
 export const FloatingWorkoutButton = () => {
-    const { isWorkoutInProgress, workoutNameToResume } = useWorkoutStatus();
-    const [expanded, setExpanded] = useState(false);
-    const [animation] = useState(new Animated.Value(0));
-    const autoCollapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-        null
-    );
+	const { isWorkoutInProgress, workoutNameToResume } = useWorkoutStatus();
+	const [expanded, setExpanded] = useState(false);
+	const [animation] = useState(new Animated.Value(0));
+	const autoCollapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null
+	);
 
-    console.log('FloatingWorkoutButton render:', {
-        isWorkoutInProgress,
-        workoutNameToResume
-    });
+	console.log('FloatingWorkoutButton render:', {
+		isWorkoutInProgress,
+		workoutNameToResume,
+	});
 
-    if (!isWorkoutInProgress) {
-        console.log('FloatingWorkoutButton not rendering - no workout in progress');
-        return null;
-    }
+	if (!isWorkoutInProgress) {
+		console.log('FloatingWorkoutButton not rendering - no workout in progress');
+		return null;
+	}
 
 	const handleResumeWorkout = () => {
 		router.push('/(tabs)/track-workout');
@@ -151,8 +151,8 @@ export const FloatingWorkoutButton = () => {
 const styles = StyleSheet.create({
 	container: {
 		position: 'absolute',
-		bottom: 90,
-		right: 24,
+		bottom: 75,
+		right: 10,
 		alignItems: 'center',
 		zIndex: 1000,
 	},
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
 	buttonText: {
 		color: 'white',
 		fontWeight: 'bold',
-		fontSize: 16,
+		fontSize: 14,
 	},
 	discardButton: {
 		position: 'absolute',
