@@ -10,20 +10,19 @@ import {
 
 // Create a wrapper component to use the context
 function TabLayoutContent() {
-	const { isWorkoutInProgress, workoutNameToResume } = useWorkoutStatus();
-	const currentPath = usePathname();
+    const { isWorkoutInProgress, workoutNameToResume } = useWorkoutStatus();
+    const currentPath = usePathname();
 
-	// Determine if we should show the workout banner
-	// Only show if workout is in progress AND we're not on the track-workout screen
-	const showWorkoutBanner =
-		isWorkoutInProgress && !currentPath.includes('/track-workout');
+    const showWorkoutBanner =
+        isWorkoutInProgress && !currentPath.includes('/track-workout');
 
-	console.log('Workout status:', {
-		isWorkoutInProgress,
-		workoutNameToResume,
-		currentPath,
-		showWorkoutBanner,
-	});
+    console.log('TabLayout workout status:', {
+        isWorkoutInProgress,
+        workoutNameToResume,
+        currentPath,
+        showWorkoutBanner,
+        pathCheck: !currentPath.includes('/track-workout')
+    });
 
 	// Handler for Resume button - navigate to track-workout
 	const handleResumeWorkout = () => {

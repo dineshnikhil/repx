@@ -107,13 +107,14 @@ export default function HomeScreen() {
 	};
 
 	return (
-		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
-			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
+		<LinearGradient colors={['#000000', '#000000']} style={styles.gradient}> 
+			{/* Changed to black gradient for a solid dark background */}
+			{/* <BlurView intensity={10} tint="dark" style={StyleSheet.absoluteFill} /> */}
+            {/* BlurView might not be needed if going for a solid black background, or adjust intensity/tint if you want a subtle effect */}
 			<SafeAreaView style={styles.safeArea}>
-				<StatusBar
-					barStyle="light-content"
-					backgroundColor="#000000"
-					translucent={Platform.OS === 'android'}
+				<StatusBar 
+					barStyle="light-content" // Ensures status bar text/icons are light
+					backgroundColor="#000000" // Match the screen background
 				/>
 
 				<View style={styles.container}>
@@ -272,6 +273,7 @@ const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
 	gradient: {
 		flex: 1,
+		backgroundColor: '#000000', // Fallback solid black background
 	},
 	safeArea: {
 		flex: 1,
@@ -279,216 +281,178 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
+		backgroundColor: 'transparent', // Ensure container is transparent to see gradient/main background
 	},
 	scrollView: {
 		flex: 1,
 	},
 	scrollContentContainer: {
 		paddingHorizontal: 15,
-		paddingBottom: 60,
+		paddingBottom: 80, // Increased padding to avoid overlap with custom tab bar if any
 	},
 	header: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		paddingHorizontal: 15,
-		marginTop: Platform.OS === 'ios' ? 0 : 10,
-		marginBottom: 10,
+		marginTop: Platform.OS === 'ios' ? 10 : 20, // Adjusted margin for better spacing
+		marginBottom: 20, // Adjusted margin
 	},
 	profileInfo: {
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 	profilePicPlaceholder: {
-		width: 45,
-		height: 45,
-		borderRadius: 23,
-		backgroundColor: '#3A3A3C',
-		marginRight: 10,
+		width: 50, // Slightly larger
+		height: 50,
+		borderRadius: 25,
+		backgroundColor: '#333333', // Darker placeholder color
+		marginRight: 12,
 	},
 	greetingText: {
-		color: '#8E8E93',
+		color: '#AAAAAA', // Lighter grey for greeting
 		fontSize: 14,
 	},
 	userNameText: {
-		color: 'white',
-		fontSize: 18,
+		color: '#FFFFFF', // White username
+		fontSize: 20, // Slightly larger username
 		fontWeight: 'bold',
 	},
 	notificationButton: {
-		padding: 6,
-		backgroundColor: '#e8f0ff',
-		borderRadius: 18,
+		padding: 8,
+		backgroundColor: '#333333', // Dark background for notification button
+		borderRadius: 20, // More rounded
 	},
+	// Calendar Styles
 	calendarContainer: {
-		marginBottom: 12,
-		paddingLeft: 0,
+		marginBottom: 25, // Increased margin
 	},
 	dayItem: {
-		backgroundColor: '#0073E6',
+		backgroundColor: '#1C1C1E', // Dark background for calendar items
 		borderRadius: 10,
-		paddingVertical: 8,
-		paddingHorizontal: 12,
+		paddingVertical: 10, // Adjusted padding
+		paddingHorizontal: 15, // Adjusted padding
 		alignItems: 'center',
-		marginRight: 8,
-		minWidth: 45,
+		marginRight: 10,
+		minWidth: 55, // Slightly wider
 	},
 	currentDayItem: {
-		backgroundColor: '#e3ffa8',
+		backgroundColor: '#FF6B00', // Orange for current day
 	},
 	dayNameText: {
-		color: 'white',
+		color: '#AAAAAA', // Lighter grey for day name
 		fontSize: 12,
-		marginBottom: 2,
+		marginBottom: 4, // Adjusted margin
 	},
 	currentDayNameText: {
-		color: '#272c36',
+		color: '#FFFFFF', // White text for current day name
 	},
 	dateText: {
-		color: 'white',
-		fontSize: 14,
+		color: '#FFFFFF', // White for date text
+		fontSize: 16, // Larger date text
 		fontWeight: 'bold',
 	},
 	currentDateText: {
-		color: '#272c36',
+		color: '#FFFFFF', // White text for current date
 	},
+	// Card Styles
 	card: {
-		backgroundColor: '#e8f0ff',
+		backgroundColor: '#1C1C1E', // Dark background for card
 		borderRadius: 14,
-		marginHorizontal: 5,
-		padding: 15,
-		marginBottom: 15,
+		padding: 20, // Increased padding
+		marginBottom: 20,
+		marginHorizontal: 0, // Remove horizontal margin if scrollContentContainer has padding
 	},
 	cardHeader: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		marginBottom: 12,
+		marginBottom: 15,
 	},
 	cardTitle: {
-		color: '#272c36',
-		fontSize: 16,
+		color: '#FFFFFF', // White card title
+		fontSize: 18, // Larger card title
 		fontWeight: 'bold',
 	},
 	timeRangeButton: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: '#e8f0ff',
-		paddingVertical: 5,
-		paddingHorizontal: 8,
-		borderRadius: 6,
+		backgroundColor: '#333333', // Dark background for time range button
+		paddingVertical: 6,
+		paddingHorizontal: 10,
+		borderRadius: 8,
 	},
 	timeRangeText: {
-		color: '#272c36',
-		fontSize: 12,
-		marginRight: 4,
+		color: '#FFFFFF', // White text for time range
+		fontSize: 13,
+		marginRight: 5,
 	},
-	graphContainer: {
-		alignItems: 'center',
-		marginBottom: 12,
-	},
-	xAxisLabelsContainer: {
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-		width: '100%',
-		paddingHorizontal: padding - 10,
-		marginTop: 3,
-	},
-	xAxisLabel: {
-		fontSize: 10,
-		color: '#8E8E93',
-	},
+	// Current Weight Section
 	currentWeightContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		alignItems: 'flex-end',
-		marginTop: 8,
+		alignItems: 'flex-end', // Keep alignment
+		marginTop: 15, // Adjusted margin
 	},
 	currentWeightLabel: {
-		color: '#a1a8b4',
-		fontSize: 12,
-		marginBottom: 2,
+		color: '#AAAAAA', // Lighter grey for label
+		fontSize: 13, // Slightly larger
+		marginBottom: 4,
 	},
 	weightValueContainer: {
 		flexDirection: 'row',
 		alignItems: 'baseline',
 	},
 	currentWeightValue: {
-		color: '#0057FF',
-		fontSize: 32,
+		color: '#FFFFFF', // White for weight value
+		fontSize: 36, // Larger weight value
 		fontWeight: 'bold',
 	},
 	currentWeightUnit: {
-		color: '#a1a8b4',
+		color: '#AAAAAA', // Lighter grey for unit
 		fontSize: 14,
-		marginLeft: 3,
-		marginBottom: 4,
+		marginLeft: 4,
+		marginBottom: 5, // Adjusted for baseline alignment
 	},
 	trackTodayButton: {
-		backgroundColor: '#0057FF',
+		backgroundColor: '#FF6B00', // Orange for track today button
 		borderRadius: 8,
-		paddingVertical: 10,
-		paddingHorizontal: 16,
+		paddingVertical: 12, // Adjusted padding
+		paddingHorizontal: 20, // Adjusted padding
 	},
 	trackTodayButtonText: {
-		color: '#ffffff',
+		color: '#FFFFFF', // White text for button
 		fontSize: 14,
 		fontWeight: 'bold',
 	},
-	startWorkoutButton: {
-		backgroundColor: '#FF6B00',
-		borderRadius: 20,
-		paddingVertical: 12,
-		alignItems: 'center',
-		justifyContent: 'center',
-		flexDirection: 'row',
-		position: 'absolute',
-		bottom: 20,
-		right: 0,
-		width: screenWidth / 2,
-		marginRight: 15,
-		marginBottom: 20,
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
-		elevation: 5,
-	},
-	startWorkoutButtonText: {
-		color: 'white',
-		fontSize: 16,
-		fontWeight: 'bold',
-	},
-	plusIcon: {
-		marginLeft: 6,
-	},
-	loadingText: {
-		color: '#8E8E93',
-		textAlign: 'center',
-		marginTop: 15,
-	},
-	// Dropdown Styles
+	// Dropdown Styles (keeping these consistent with a dark theme)
 	dropdownOverlay: {
 		flex: 1,
-		backgroundColor: 'rgba(0,0,0,0.5)',
+		backgroundColor: 'rgba(0,0,0,0.7)', // Darker overlay for dropdown
 	},
 	dropdownContainer: {
-		backgroundColor: '#2C2C2E',
+		backgroundColor: '#1C1C1E', // Dark background for dropdown itself
 		borderRadius: 8,
-		paddingVertical: 4,
-		width: 135,
-		elevation: 5,
+		paddingVertical: 5,
+		width: 135, // Or adjust as needed
+		elevation: 8, // Standard elevation for dark themes
 		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.3,
+		shadowRadius: 5,
 	},
 	dropdownItem: {
-		paddingVertical: 8,
-		paddingHorizontal: 12,
+		paddingHorizontal: 15,
+		paddingVertical: 10,
 	},
 	dropdownItemText: {
-		color: 'white',
-		fontSize: 13,
+		color: '#FFFFFF', // White text for dropdown items
+		fontSize: 14,
 	},
 });
+
+// Make sure to update the Feather icon colors directly in the JSX where they are used:
+// Example for Notification Bell:
+// <Feather name="bell" size={24} color="#FF6B00" /> 
+// Example for Chevron in Time Range Button:
+// <Feather name="chevron-down" size={16} color="#FFFFFF" />

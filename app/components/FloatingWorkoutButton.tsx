@@ -12,17 +12,22 @@ import {
 import { useWorkoutStatus } from '../contexts/WorkoutStatusContext';
 
 export const FloatingWorkoutButton = () => {
-	const { isWorkoutInProgress, workoutNameToResume } = useWorkoutStatus();
-	const [expanded, setExpanded] = useState(false);
-	const [animation] = useState(new Animated.Value(0));
-	const autoCollapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-		null
-	);
+    const { isWorkoutInProgress, workoutNameToResume } = useWorkoutStatus();
+    const [expanded, setExpanded] = useState(false);
+    const [animation] = useState(new Animated.Value(0));
+    const autoCollapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+    );
 
-	// Don't render if no workout in progress
-	if (!isWorkoutInProgress) {
-		return null;
-	}
+    console.log('FloatingWorkoutButton render:', {
+        isWorkoutInProgress,
+        workoutNameToResume
+    });
+
+    if (!isWorkoutInProgress) {
+        console.log('FloatingWorkoutButton not rendering - no workout in progress');
+        return null;
+    }
 
 	const handleResumeWorkout = () => {
 		router.push('/(tabs)/track-workout');

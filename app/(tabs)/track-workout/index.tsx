@@ -183,26 +183,12 @@ export default function TrackWorkoutScreen() {
 		router.push('/track-workout/search');
 	};
 
-	// Calculate total volume and sets from workoutExercises
-	const totalVolume = workoutExercises.reduce((acc, exercise) => {
-		return (
-			acc +
-			exercise.sets.reduce((setAcc, currentSet) => {
-				const weight = parseFloat(currentSet.kg) || 0;
-				const numReps = parseInt(currentSet.reps, 10) || 0;
-				// Convert lbs to kg if the exercise is using lbs
-				const convertedWeight =
-					exercise.weightUnit === 'Lbs'
-						? weight * 0.45359237 // lbs to kg conversion
-						: weight;
-				return setAcc + convertedWeight * numReps;
-			}, 0)
+	// Function to remove an exercise from the workout
+	const handleRemoveExerciseFromWorkout = (exerciseName: string) => {
+		setWorkoutExercises((prevExercises) =>
+			prevExercises.filter((exercise) => exercise.name !== exerciseName)
 		);
-	}, 0);
-
-	const totalSets = workoutExercises.reduce((acc, exercise) => {
-		return acc + exercise.sets.length;
-	}, 0);
+	};
 
 	// Start the timer as soon as the screen loads
 	useEffect(() => {
@@ -217,8 +203,8 @@ export default function TrackWorkoutScreen() {
 		};
 	}, [timerRunning]);
 
-	// Format the duration into hours, minutes, seconds
-	const formatDuration = (totalSeconds: number): string => {
+	// Function to format duration
+	const formatDuration = (totalSeconds: number) => {
 		const hours = Math.floor(totalSeconds / 3600);
 		const minutes = Math.floor((totalSeconds % 3600) / 60);
 		const seconds = totalSeconds % 60;
@@ -374,61 +360,78 @@ export default function TrackWorkoutScreen() {
 	useEffect(() => {
 		// Update workout status whenever workoutExercises changes
 		const inProgress = workoutExercises.length > 0;
-		console.log(
-			'Setting workout in progress:',
-			inProgress,
-			'with name:',
-			workoutName
-		);
-
 		setIsWorkoutInProgress(inProgress);
-
-		// Set a workout name if there are exercises
-		if (inProgress && workoutNameToResume && workoutName === 'Track Workout') {
-			setWorkoutName(workoutNameToResume);
-		} else if (inProgress) {
+		if (inProgress) {
 			setWorkoutNameToResume(workoutName);
 		} else {
 			setWorkoutNameToResume(null);
 		}
+
+		// Cleanup function
+		return () => {
+			if (workoutExercises.length > 0) {
+				// Ensure workout status remains true when navigating away
+				setIsWorkoutInProgress(true);
+				setWorkoutNameToResume(workoutName);
+				console.log('Preserving workout status on unmount:', {
+					isWorkoutInProgress: true,
+					workoutNameToResume: workoutName
+				});
+			}
+		};
 	}, [
-		workoutExercises.length,
-		setIsWorkoutInProgress,
-		setWorkoutNameToResume,
+		workoutExercises, 
+		setIsWorkoutInProgress, 
+		setWorkoutNameToResume, 
 		workoutName,
+		// workoutNameToResume, // Consider if this is truly needed here or if it causes re-runs
 	]);
 
 	// Function to update weight unit for an exercise
 	const updateWeightUnit = (exerciseName: string, unit: 'Kg' | 'Lbs') => {
 		setWorkoutExercises((prevExercises) =>
-			prevExercises.map((ex) =>
-				ex.name === exerciseName
-					? {
-							...ex,
-							weightUnit: unit,
-					  }
-					: ex
+			prevExercises.map((exercise) =>
+				exercise.name === exerciseName ? { ...exercise, weightUnit: unit } : exercise
 			)
 		);
 	};
 
-	// Footer component for the exercise list
-	const ExerciseListFooter = () => (
-		<>
-			<TouchableOpacity style={styles.addButton} onPress={goToSearchScreen}>
-				<Text style={styles.addButtonText}>+ Add Exercise</Text>
-			</TouchableOpacity>
-			<View style={styles.bottomActions}>
-				<TouchableOpacity style={styles.settingsButton}>
-					<Text style={styles.settingsText}>Finish</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.discardButton} onPress={discardWorkout}>
-					<Text style={styles.discardText}>Discard Workout</Text>
-				</TouchableOpacity>
-			</View>
-			{/* Spacing for tab bar */}
-			<View style={{ height: 40 }} />
-		</>
+	// Effect to update WorkoutStatusContext
+	useEffect(() => {
+		// Update workout status whenever workoutExercises changes
+		const inProgress = workoutExercises.length > 0;
+		setIsWorkoutInProgress(inProgress);
+		if (inProgress) {
+			setWorkoutNameToResume(workoutName);
+		} else {
+			setWorkoutNameToResume(null);
+		}
+
+		// Cleanup function
+		return () => {
+			if (workoutExercises.length > 0) {
+				// Ensure workout status remains true when navigating away
+				setIsWorkoutInProgress(true);
+				setWorkoutNameToResume(workoutName);
+				console.log('Preserving workout status on unmount:', {
+					isWorkoutInProgress: true,
+					workoutNameToResume: workoutName
+				});
+			}
+		};
+	}, [workoutExercises, workoutName, setIsWorkoutInProgress, setWorkoutNameToResume]);
+
+	// Render item for FlatList
+	const renderItem = ({ item }: { item: WorkoutExerciseWithUnit }) => (
+		<ExerciseCard
+			exercise={item}
+			handleSetChange={handleSetChange}
+			addSetToExercise={addSetToExercise}
+			removeSetFromExercise={removeSetFromExercise}
+			openCommentModal={openCommentModal}
+			updateWeightUnit={updateWeightUnit}
+			removeExercise={handleRemoveExerciseFromWorkout} // Pass the new function here
+		/>
 	);
 
 	return (
@@ -452,8 +455,14 @@ export default function TrackWorkoutScreen() {
 					{/* Workout Stats */}
 					<StatsCard
 						duration={duration}
-						totalVolume={totalVolume}
-						totalSets={totalSets}
+						totalVolume={workoutExercises.reduce((total, exercise) => {
+							return total + exercise.sets.reduce((setTotal, set) => {
+								const kg = parseFloat(set.kg) || 0;
+								const reps = parseFloat(set.reps) || 0;
+								return setTotal + (kg * reps);
+							}, 0);
+						}, 0)}
+						totalSets={workoutExercises.reduce((total, exercise) => total + exercise.sets.length, 0)}
 						formatDuration={formatDuration}
 					/>
 				</View>
@@ -470,6 +479,7 @@ export default function TrackWorkoutScreen() {
 							data={workoutExercises}
 							renderItem={({ item }) => (
 								<ExerciseCard
+									removeExercise={handleRemoveExerciseFromWorkout}
 									exercise={item}
 									handleSetChange={handleSetChange}
 									addSetToExercise={addSetToExercise}
@@ -483,7 +493,30 @@ export default function TrackWorkoutScreen() {
 							showsVerticalScrollIndicator={false}
 							contentContainerStyle={styles.exerciseListContentContainer}
 							ListFooterComponentStyle={styles.listFooterComponentStyle}
-							ListFooterComponent={<ExerciseListFooter />}
+							ListFooterComponent={() => (
+								<View>
+									<TouchableOpacity
+										style={styles.addButton} // This style might need to be full width or adjusted
+										onPress={goToSearchScreen}
+									>
+										<Text style={styles.addButtonText}>+ Add Exercise</Text>
+									</TouchableOpacity>
+									<View style={styles.bottomActions}>
+										<TouchableOpacity
+											style={styles.settingsButton}
+											// onPress={() => { /* Define settings action */ }}
+										>
+											<Text style={styles.settingsText}>Settings</Text>
+										</TouchableOpacity>
+										<TouchableOpacity
+											style={styles.discardButton}
+											onPress={() => setDiscardModalVisible(true)}
+										>
+											<Text style={styles.discardText}>Discard Workout</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
+							)}
 						/>
 					)}
 				</View>

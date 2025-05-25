@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import {
+	// Alert, // Remove Alert import
 	StyleSheet,
 	Text,
 	TextInput,
@@ -8,6 +9,7 @@ import {
 	View,
 } from 'react-native';
 import { ExerciseSet, WorkoutExercise } from '../../types/workout';
+import ConfirmationModal from '../ConfirmationModal'; // Import ConfirmationModal
 
 interface ExerciseCardProps {
 	exercise: WorkoutExercise;
@@ -21,6 +23,7 @@ interface ExerciseCardProps {
 	removeSetFromExercise: (exerciseName: string, setId: string) => void;
 	openCommentModal: (exerciseName: string) => void;
 	updateWeightUnit: (exerciseName: string, unit: 'Kg' | 'Lbs') => void;
+	removeExercise: (exerciseName: string) => void; // New prop
 }
 
 export const ExerciseCard: React.FC<ExerciseCardProps> = ({
@@ -30,8 +33,20 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 	removeSetFromExercise,
 	openCommentModal,
 	updateWeightUnit,
+	removeExercise,
 }) => {
 	const [unit, setUnit] = useState<'Kg' | 'Lbs'>('Kg');
+	const [isRemoveModalVisible, setIsRemoveModalVisible] = useState(false); // State for modal visibility
+
+	// Function to handle remove exercise option
+	const handleRemoveExercisePress = () => {
+		setIsRemoveModalVisible(true); // Show the modal
+	};
+
+	const confirmRemoveExercise = () => {
+		removeExercise(exercise.name);
+		// setIsRemoveModalVisible(false); // Modal closes itself on confirm
+	};
 
 	// Function to toggle the unit
 	const toggleUnit = () => {
@@ -75,7 +90,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 						{exercise.comment || 'Add a comment...'}
 					</Text>
 				</View>
-				<TouchableOpacity style={styles.exerciseOptionsButton}>
+				<TouchableOpacity style={styles.exerciseOptionsButton} onPress={handleRemoveExercisePress}>
 					<Ionicons name="ellipsis-vertical" size={24} color="white" />
 				</TouchableOpacity>
 			</View>
@@ -184,6 +199,15 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 					<Text style={styles.addCommentButtonText}>Add comment</Text>
 				</TouchableOpacity>
 			</View>
+
+			<ConfirmationModal
+				visible={isRemoveModalVisible}
+				onClose={() => setIsRemoveModalVisible(false)}
+				onConfirm={confirmRemoveExercise}
+				title="Remove Exercise"
+				message={`Are you sure you want to remove "${exercise.name}"?`}
+				confirmButtonText="Remove"
+			/>
 		</View>
 	);
 };

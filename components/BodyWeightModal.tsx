@@ -46,8 +46,13 @@ const BodyWeightModal: React.FC<BodyWeightModalProps> = ({
 			setOnEmptyStomach(true);
 			// Auto-focus input and open keyboard
 			setTimeout(() => {
-				weightInputRef.current?.focus();
-			}, 300); // Small delay to ensure modal is fully rendered
+				if (weightInputRef.current) {
+					weightInputRef.current.focus();
+				}
+			}, 400); // Increased delay slightly
+		} else {
+			// Optionally dismiss keyboard when modal is closed
+			Keyboard.dismiss();
 		}
 	}, [visible]);
 
@@ -224,18 +229,17 @@ const BodyWeightModal: React.FC<BodyWeightModalProps> = ({
 
 const styles = StyleSheet.create({
 	keyboardAvoidingContainer: {
-		// Style for the KeyboardAvoidingView itself
-		flex: 1, // Ensures it takes up the full screen to manage view adjustments properly
+		flex: 1,
 	},
 	modalOverlay: {
 		flex: 1,
-		backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker, more blurred effect
+		backgroundColor: 'rgba(0, 0, 0, 0.8)', // Darker overlay
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	modalContent: {
 		width: '90%',
-		backgroundColor: '#e8f0ff', // Dark background like the image
+		backgroundColor: '#1C1C1E', // Dark background for modal content (iOS system dark gray)
 		borderRadius: 20,
 		padding: 25,
 		alignItems: 'center',
@@ -252,10 +256,10 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: 15,
 		left: 15,
-		padding: 8, // Added padding for touch area and for centering icon
-		backgroundColor: '#a1a8b4', // Dark grey background
-		borderRadius: 15, // Make it circular (half of width/height if they were fixed)
-		zIndex: 1, // Ensure it's above other modal content if necessary
+		padding: 8,
+		backgroundColor: '#3A3A3C', // Darker grey for close button background
+		borderRadius: 15, 
+		zIndex: 1,
 	},
 	datePickerContainer: {
 		alignSelf: 'flex-end',
@@ -264,13 +268,14 @@ const styles = StyleSheet.create({
 	dateDisplay: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: '#2C2C2E',
+		backgroundColor: '#2C2C2E', // Slightly lighter dark gray for date display
 		paddingVertical: 8,
 		paddingHorizontal: 12,
 		borderRadius: 8,
 	},
 	calendarIcon: {
 		marginRight: 8,
+		// color is set by prop, FF9500 in component
 	},
 	dateText: {
 		color: 'white',
@@ -278,82 +283,84 @@ const styles = StyleSheet.create({
 		fontWeight: '500',
 	},
 	title: {
-		color: '#272C36',
+		color: 'white', // White title text
 		fontSize: 22,
 		fontWeight: 'bold',
 		textAlign: 'center',
-		marginBottom: 25, // Increased margin
-		alignSelf: 'stretch', // Ensure it takes full width for text align center
+		marginBottom: 25,
+		alignSelf: 'stretch',
 	},
 	unitSelector: {
 		flexDirection: 'row',
-		backgroundColor: 'white', // White background for the selector itself
+		backgroundColor: '#2C2C2E', // Background for the selector container
 		borderRadius: 10,
 		overflow: 'hidden',
-		marginBottom: 25, // Increased margin
-		height: 45, // Fixed height
+		marginBottom: 25,
+		height: 45,
 		width: '100%',
 	},
 	unitButton: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingVertical: 10, // Adjusted padding
+		paddingVertical: 10,
 	},
 	selectedUnitButton: {
-		backgroundColor: 'black', // Selected unit background
+		backgroundColor: 'black', // Selected unit background (as per image, Kg is selected and black)
+		borderRadius: 8, // Rounded corners for the selected button part
+		margin: 2, // Add some margin to make it look inset
 	},
 	unitButtonText: {
-		color: 'black', // Text color for unselected
+		color: 'white', // Text color for unselected (Lbs in image)
 		fontSize: 16,
 		fontWeight: 'bold',
 	},
 	selectedUnitButtonText: {
-		color: 'white', // Text color for selected
+		color: 'white', // Text color for selected (Kg in image)
 	},
 	weightInput: {
 		width: '100%',
-		height: 55, // Increased height
-		backgroundColor: '#ffffff', // Darker input background
+		height: 55,
+		backgroundColor: '#1C1C1E', // Same as modal content background
 		borderRadius: 10,
-		color: 'white',
+		color: 'white', // White text color for input
 		fontSize: 16,
 		textAlign: 'center',
 		paddingHorizontal: 15,
-		marginBottom: 25, // Increased margin
+		marginBottom: 25,
 		borderWidth: 1,
-		borderColor: '#FF9500', // Orange border as in image
+		borderColor: '#FF9500', // Orange border
 	},
 	checkboxContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		alignSelf: 'flex-start', // Align to the left
-		marginBottom: 30, // Increased margin
-		marginLeft: 5, // Small indent
+		alignSelf: 'flex-start',
+		marginBottom: 30,
+		marginLeft: 5,
 	},
 	checkbox: {
 		width: 20,
 		height: 20,
-		borderRadius: 5, // Slightly rounded square
+		borderRadius: 5,
 		borderWidth: 1.5,
-		borderColor: '#8E8E93', // Grey border
+		borderColor: '#8E8E93', // Grey border for unchecked box
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginRight: 12,
-		backgroundColor: 'transparent', // Ensure background is transparent for the checkmark
+		backgroundColor: 'transparent',
 	},
 	checkboxChecked: {
 		backgroundColor: '#FF9500', // Orange background when checked
-		borderColor: '#FF9500', // Orange border when checked
+		borderColor: '#FF9500',
 	},
 	checkboxLabel: {
-		color: 'white',
+		color: 'white', // White label text
 		fontSize: 15,
 	},
 	trackButton: {
 		backgroundColor: '#FF6B00', // Orange button color
 		borderRadius: 12,
-		paddingVertical: 15, // Increased padding
+		paddingVertical: 15,
 		width: '100%',
 		alignItems: 'center',
 	},

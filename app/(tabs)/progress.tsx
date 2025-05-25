@@ -138,10 +138,10 @@ export default function ProgressScreen() {
 					onPress={() => router.back()}
 					style={styles.backButton}
 				>
-					<Ionicons name="chevron-back" size={28} color="#888" />
+					<Feather name="chevron-left" size={32} color="white" />
 				</TouchableOpacity>
 				<Text style={styles.title}>My Statistics</Text>
-				<TouchableOpacity style={styles.alarmButton}>
+				<TouchableOpacity style={styles.timerButton}>
 					<Ionicons name="alarm" size={28} color="#FF5722" />
 				</TouchableOpacity>
 			</View>
@@ -338,16 +338,29 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: 15,
 		paddingVertical: 15,
-		borderBottomWidth: 0.5,
-		borderBottomColor: '#333',
+		marginBottom: 20,
+		borderBottomWidth: 0, // Remove the border
 	},
 	backButton: {
-		padding: 5,
+		width: 50,
+		height: 50,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#1C1C1E',
+		borderRadius: 25,
 	},
 	title: {
 		color: 'white',
-		fontSize: 22,
+		fontSize: 24,
 		fontWeight: 'bold',
+	},
+	timerButton: {
+		width: 50,
+		height: 50,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#1C1C1E',
+		borderRadius: 25,
 	},
 	alarmButton: {
 		padding: 5,

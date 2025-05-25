@@ -1,24 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router'; // Add this import
+import { router } from 'expo-router';
 
 interface FitnessLevelStepProps {
 	fitnessLevel: string;
 	updateFitnessLevel: (level: string) => void;
-	onContinue: () => void; // This prop might be directly calling router.push or similar
+	onContinue: () => void;
 }
 
 const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 	fitnessLevel,
 	updateFitnessLevel,
-	onContinue, // We will modify how this is called or what it does
+	onContinue,
 }) => {
 	const handleContinue = () => {
 		// Navigate to the new home screen
-		router.replace('/home'); // Or router.push('/home') depending on desired stack behavior
+		router.replace('/home');
 		// If onContinue has other responsibilities, call it before or after navigation
 		// onContinue(); 
 	};
+
+	// Check if a fitness level has been selected
+	const isLevelSelected = fitnessLevel !== undefined && fitnessLevel !== '';
 
 	return (
 		<View style={styles.container}>
@@ -56,8 +59,12 @@ const FitnessLevelStep: React.FC<FitnessLevelStepProps> = ({
 				</TouchableOpacity>
 			</View>
 
-			<TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-				<Text style={styles.continueText}>Next Step</Text>
+			<TouchableOpacity 
+				style={[styles.continueButton, !isLevelSelected && styles.disabledButton]} 
+				onPress={handleContinue}
+				disabled={!isLevelSelected}
+			>
+				<Text style={[styles.continueText, !isLevelSelected && styles.disabledText]}>Next Step</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -104,10 +111,17 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginBottom: 40,
 	},
+	disabledButton: {
+		backgroundColor: '#555555', // Darker gray for disabled state
+		opacity: 0.7,
+	},
 	continueText: {
 		color: 'white',
 		fontSize: 16,
 		fontWeight: 'bold',
+	},
+	disabledText: {
+		color: '#CCCCCC', // Lighter color for disabled text
 	},
 });
 
