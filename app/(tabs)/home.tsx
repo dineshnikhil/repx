@@ -106,7 +106,7 @@ export default function HomeScreen() {
 	};
 
 	return (
-		<LinearGradient colors={['#000000', '#000000']} style={styles.gradient}>
+		<LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.gradient}>
 			{/* Changed to black gradient for a solid dark background */}
 			{/* <BlurView intensity={10} tint="dark" style={StyleSheet.absoluteFill} /> */}
 			{/* BlurView might not be needed if going for a solid black background, or adjust intensity/tint if you want a subtle effect */}
@@ -272,7 +272,7 @@ const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
 	gradient: {
 		flex: 1,
-		backgroundColor: '#000000', // Fallback solid black background
+		backgroundColor: '#0A0A0A', // Fallback solid black background
 	},
 	safeArea: {
 		flex: 1,
@@ -286,16 +286,17 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	scrollContentContainer: {
-		paddingHorizontal: 15,
+		paddingHorizontal: 5,
 		paddingBottom: 80, // Increased padding to avoid overlap with custom tab bar if any
 	},
 	header: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		paddingHorizontal: 15,
-		marginTop: Platform.OS === 'ios' ? 10 : 20, // Adjusted margin for better spacing
-		marginBottom: 15, // Adjusted margin
+		paddingHorizontal: 5,
+		marginTop: Platform.OS === 'ios' ? 0 : 20, // Adjusted margin for better spacing
+		marginBottom: 10, // Adjusted margin
+		backgroundColor: '#0A0A0A',
 	},
 	profileInfo: {
 		flexDirection: 'row',
@@ -333,15 +334,15 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15, // Adjusted padding
 		alignItems: 'center',
 		marginRight: 10,
-		minWidth: 55, // Slightly wider
+		minWidth: 50, // Slightly wider
 	},
 	currentDayItem: {
 		backgroundColor: '#FF6B00', // Orange for current day
 	},
 	dayNameText: {
 		color: '#AAAAAA', // Lighter grey for day name
-		fontSize: 12,
-		marginBottom: 4, // Adjusted margin
+		fontSize: 10,
+		marginBottom: 6, // Adjusted margin
 	},
 	currentDayNameText: {
 		color: '#FFFFFF', // White text for current day name

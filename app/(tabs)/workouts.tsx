@@ -32,12 +32,12 @@ export default function WorkoutsScreen() {
 	};
 
 	return (
-		<LinearGradient colors={['#0057FF', '#0073E6']} style={styles.gradient}>
+		<LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.gradient}>
 			<BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
 			<SafeAreaView style={styles.safeArea}>
 				<StatusBar
 					barStyle="light-content"
-					backgroundColor="#000000"
+					backgroundColor="#0A0A0A"
 					translucent={Platform.OS === 'android'}
 				/>
 
@@ -103,6 +103,7 @@ const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
 	gradient: {
 		flex: 1,
+		backgroundColor: '#0A0A0A',
 	},
 	safeArea: {
 		flex: 1,
@@ -115,9 +116,10 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		paddingHorizontal: 20,
-		marginTop: Platform.OS === 'ios' ? 0 : 20,
-		marginBottom: 20,
+		paddingHorizontal: 15,
+		marginTop: Platform.OS === 'ios' ? 0 : 20, // Adjusted margin for better spacing
+		marginBottom: 15, // Adjusted margin
+		backgroundColor: '#0A0A0A',
 	},
 	profilePic: {
 		width: 50,
@@ -140,7 +142,8 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 	},
 	scrollContentContainer: {
-		paddingTop: 10,
+		paddingHorizontal: 0,
+		paddingBottom: 80, // Increased padding to avoid overlap with custom tab bar if any
 	},
 	startWorkoutButton: {
 		backgroundColor: '#ffffff',
