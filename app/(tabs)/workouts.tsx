@@ -46,7 +46,7 @@ export default function WorkoutsScreen() {
 						<View style={styles.profilePic} />
 						<Text style={styles.screenTitle}>Workouts</Text>
 						<TouchableOpacity style={styles.notificationButton}>
-							<Feather name="bell" size={24} color="#272C36" />
+							<Feather name="bell" size={24} color="#FF7A2F" />
 						</TouchableOpacity>
 					</View>
 
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
 		width: 50,
 		height: 50,
 		borderRadius: 25,
-		backgroundColor: '#E5E5E5',
+		backgroundColor: '#D9D9D9',
 	},
 	notificationButton: {
 		padding: 8,
-		backgroundColor: '#E8F0FF',
+		backgroundColor: '#1C1C1E',
 		borderRadius: 20,
 	},
 	screenTitle: {
@@ -143,10 +143,10 @@ const styles = StyleSheet.create({
 	},
 	scrollContentContainer: {
 		paddingHorizontal: 0,
-		paddingBottom: 80, // Increased padding to avoid overlap with custom tab bar if any
+		paddingBottom: 80,
 	},
 	startWorkoutButton: {
-		backgroundColor: '#ffffff',
+		backgroundColor: '#FF7A2F',
 		borderRadius: 16,
 		padding: 16,
 		marginBottom: 24,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	startWorkoutText: {
-		color: '#0057ff',
+		color: '#FFFFFF',
 		fontSize: 18,
 		fontWeight: 'bold',
 		textAlign: 'center',
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
 		width: '48%',
 	},
 	sectionTitle: {
-		color: '#ffffff',
+		color: '#A0A0A0',
 		fontSize: 16,
 		marginBottom: 16,
 	},

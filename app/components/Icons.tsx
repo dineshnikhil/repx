@@ -11,11 +11,11 @@ export const NotificationIcon = () => {
 };
 
 export const DocumentIcon = () => {
-	return <Feather name="file-text" size={32} color="#999" />;
+	return <Feather name="file-text" size={32} color="#A0A0A0" />;
 };
 
 export const SearchIcon = () => {
-	return <Feather name="search" size={32} color="#999" />;
+	return <Feather name="search" size={32} color="#A0A0A0" />;
 };
 
 export const AddIcon = () => {
@@ -23,7 +23,7 @@ export const AddIcon = () => {
 };
 
 export const DumbbellIcon = () => {
-	return <Ionicons name="barbell-outline" size={24} color="#999" />;
+	return <Ionicons name="barbell-outline" size={24} color="#A0A0A0" />;
 };
 
 const styles = StyleSheet.create({
